@@ -80,7 +80,7 @@
   // Code blocks using 4 spaces with internal indentation
   MT("codeBlocksUsing4SpacesIndentation",
      "    [comment bar]",
-     "        [comment main]",
+     "        [comment hello]",
      "            [comment world]",
      "    [comment foo]",
      "bar");
@@ -89,7 +89,7 @@
   MT("codeBlocksUsing4SpacesIndentation",
      " foo",
      "    [comment bar]",
-     "        [comment main]",
+     "        [comment hello]",
      "    [comment world]");
 
   // Code blocks should end even after extra indented lines
@@ -98,7 +98,7 @@
      "        [comment bar]",
      "    [comment baz]",
      "    ",
-     "main");
+     "hello");
 
   // Code blocks using 1 tab (regardless of CodeMirror.indentWithTabs value)
   MT("codeBlocksUsing1Tab",
@@ -135,15 +135,15 @@
 
   // Multiple backticks within an inline code block with a second code block
   MT("consecutiveBackticks",
-     "[comment `foo```bar`] main [comment `world`]");
+     "[comment `foo```bar`] hello [comment `world`]");
 
   // Unclosed with several different groups of backticks
   MT("unclosedBackticks",
-     "[comment ``foo ``` bar` main]");
+     "[comment ``foo ``` bar` hello]");
 
   // Closed with several different groups of backticks
   MT("closedBackticks",
-     "[comment ``foo ``` bar` main``] world");
+     "[comment ``foo ``` bar` hello``] world");
 
   // atx headers
   // http://daringfireball.net/projects/markdown/syntax#header
@@ -237,7 +237,7 @@
      "[quote&quote-1 >foo]",
      "[quote&quote-1 bar]",
      "",
-     "main");
+     "hello");
 
   // Multi-line blockquote (non-lazy mode)
   MT("multiBlockquote",
@@ -249,7 +249,7 @@
      "[quote&quote-1 >foo]",
      "[quote&quote-1 >bar]",
      "",
-     "main");
+     "hello");
 
   // Check list types
 
@@ -285,7 +285,7 @@
   MT("listBogus",
      "foo",
      "1. bar",
-     "2. main");
+     "2. hello");
 
   // List after header
   MT("listAfterHeader",
@@ -334,7 +334,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "    [variable-2 main]");
+     "    [variable-2 hello]");
 
   // 4 spaces, extra blank lines (should still be list, per Dingus)
   MT("listMultiParagraphExtra",
@@ -343,7 +343,7 @@
      "[variable-2 * bar]",
      "",
      "",
-     "    [variable-2 main]");
+     "    [variable-2 hello]");
 
   // 4 spaces, plus 1 space (should still be list, per Dingus)
   MT("listMultiParagraphExtraSpace",
@@ -351,7 +351,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "     [variable-2 main]",
+     "     [variable-2 hello]",
      "",
      "    [variable-2 world]");
 
@@ -361,7 +361,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "\t[variable-2 main]");
+     "\t[variable-2 hello]");
 
   // No indent
   MT("listNoIndent",
@@ -369,7 +369,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "main");
+     "hello");
 
   // Blockquote
   MT("blockquote",
@@ -377,7 +377,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "    [variable-2&quote&quote-1 > main]");
+     "    [variable-2&quote&quote-1 > hello]");
 
   // Code block
   MT("blockquoteCode",
@@ -385,7 +385,7 @@
      "",
      "[variable-2 * bar]",
      "",
-     "        [comment > main]",
+     "        [comment > hello]",
      "",
      "    [variable-2 world]");
 
@@ -395,7 +395,7 @@
      "",
      "    [variable-2 bar]",
      "",
-     "        [comment main]",
+     "        [comment hello]",
      "",
      "    [variable-2 world]");
 
@@ -426,7 +426,7 @@
      "",
      "    [variable-3 + bar]",
      "",
-     "        [keyword - main]",
+     "        [keyword - hello]",
      "",
      "            [variable-2 1. world]");
 
@@ -435,21 +435,21 @@
      "",
      "    [variable-3 + bar]",
      "",
-     "        [quote&quote-1&variable-3 > main]");
+     "        [quote&quote-1&variable-3 > hello]");
 
   MT("listCode",
      "[variable-2 * foo]",
      "",
      "    [variable-3 + bar]",
      "",
-     "            [comment main]");
+     "            [comment hello]");
 
   // Code with internal indentation
   MT("listCodeIndentation",
      "[variable-2 * foo]",
      "",
      "        [comment bar]",
-     "            [comment main]",
+     "            [comment hello]",
      "                [comment world]",
      "        [comment foo]",
      "    [variable-2 bar]");
@@ -460,7 +460,7 @@
     "",
     "    [variable-3 * bar]",
     "",
-    "       [variable-2 main]"
+    "       [variable-2 hello]"
   );
   MT("listNested",
     "[variable-2 * foo]",
@@ -476,7 +476,7 @@
      "",
      "        [comment bar]",
      "",
-     "main");
+     "hello");
 
   // Following tests directly from official Markdown documentation
   // http://daringfireball.net/projects/markdown/syntax#hr
@@ -498,7 +498,7 @@
 
   // Inline link with title
   MT("linkTitle",
-     "[link [[foo]]][string (http://example.com/ \"bar\")] main");
+     "[link [[foo]]][string (http://example.com/ \"bar\")] hello");
 
   // Inline link without title
   MT("linkNoTitle",
@@ -522,7 +522,7 @@
 
   // Image with title
   MT("imageTitle",
-     "[tag ![[foo]]][string (http://example.com/ \"bar\")] main");
+     "[tag ![[foo]]][string (http://example.com/ \"bar\")] hello");
 
   // Image without title
   MT("imageNoTitle",
@@ -540,32 +540,32 @@
 
   // Reference-style links
   MT("linkReference",
-     "[link [[foo]]][string [[bar]]] main");
+     "[link [[foo]]][string [[bar]]] hello");
 
   // Reference-style links with Em
   MT("linkReferenceEm",
-     "[link [[][link&em *foo*][link ]]][string [[bar]]] main");
+     "[link [[][link&em *foo*][link ]]][string [[bar]]] hello");
 
   // Reference-style links with Strong
   MT("linkReferenceStrong",
-     "[link [[][link&strong **foo**][link ]]][string [[bar]]] main");
+     "[link [[][link&strong **foo**][link ]]][string [[bar]]] hello");
 
   // Reference-style links with EmStrong
   MT("linkReferenceEmStrong",
-     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string [[bar]]] main");
+     "[link [[][link&strong **][link&em&strong *foo**][link&em *][link ]]][string [[bar]]] hello");
 
   // Reference-style links with optional space separator (per docuentation)
   // "You can optionally use a space to separate the sets of brackets"
   MT("linkReferenceSpace",
-     "[link [[foo]]] [string [[bar]]] main");
+     "[link [[foo]]] [string [[bar]]] hello");
 
   // Should only allow a single space ("...use *a* space...")
   MT("linkReferenceDoubleSpace",
-     "[[foo]]  [[bar]] main");
+     "[[foo]]  [[bar]] hello");
 
   // Reference-style links with implicit link name
   MT("linkImplicit",
-     "[link [[foo]]][string [[]]] main");
+     "[link [[foo]]][string [[]]] hello");
 
   // @todo It would be nice if, at some point, the document was actually
   // checked to see if the referenced link exists
@@ -579,10 +579,10 @@
      "   [link [[foo]]:] [string http://example.com/]");
 
   MT("labelSpaceTitle",
-     "[link [[foo bar]]:] [string http://example.com/ \"main\"]");
+     "[link [[foo bar]]:] [string http://example.com/ \"hello\"]");
 
   MT("labelDoubleTitle",
-     "[link [[foo bar]]:] [string http://example.com/ \"main\"] \"world\"");
+     "[link [[foo bar]]:] [string http://example.com/ \"hello\"] \"world\"");
 
   MT("labelTitleDoubleQuotes",
      "[link [[foo]]:] [string http://example.com/  \"bar\"]");
@@ -601,19 +601,19 @@
 
   MT("labelTitleNextDoubleQuotes",
      "[link [[foo]]:] [string http://example.com/]",
-     "[string \"bar\"] main");
+     "[string \"bar\"] hello");
 
   MT("labelTitleNextSingleQuotes",
      "[link [[foo]]:] [string http://example.com/]",
-     "[string 'bar'] main");
+     "[string 'bar'] hello");
 
   MT("labelTitleNextParenthese",
      "[link [[foo]]:] [string http://example.com/]",
-     "[string (bar)] main");
+     "[string (bar)] hello");
 
   MT("labelTitleNextMixed",
      "[link [[foo]]:] [string http://example.com/]",
-     "(bar\" main");
+     "(bar\" hello");
 
   MT("linkWeb",
      "[link <http://example.com/>] foo");
@@ -634,10 +634,10 @@
      "[em _foo_] bar");
 
   MT("emInWordAsterisk",
-     "foo[em *bar*]main");
+     "foo[em *bar*]hello");
 
   MT("emInWordUnderscore",
-     "foo[em _bar_]main");
+     "foo[em _bar_]hello");
 
   // Per documentation: "...surround an * or _ with spaces, it’ll be
   // treated as a literal asterisk or underscore."
@@ -668,7 +668,7 @@
      "[strong __foo__] bar");
 
   MT("emStrongAsterisk",
-     "[em *foo][em&strong **bar*][strong main**] world");
+     "[em *foo][em&strong **bar*][strong hello**] world");
 
   MT("emStrongUnderscore",
      "[em _foo][em&strong __bar_][strong hello__] world");

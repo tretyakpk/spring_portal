@@ -33,7 +33,7 @@
     "[tag foo] { [property width]:[number 80%] }");
 
   MT('selector',
-    "[builtin #main][qualifier .world]{}");
+    "[builtin #hello][qualifier .world]{}");
 
   MT('singleline_comment',
     "[comment // this is a comment]");
@@ -67,10 +67,10 @@
     "[tag p] { [tag a] { [property color]:[atom #000]; } }");
 
   MT('interpolation_in_property',
-    "[tag foo] { #{[variable-2 $main]}:[number 2]; }");
+    "[tag foo] { #{[variable-2 $hello]}:[number 2]; }");
 
   MT('interpolation_in_selector',
-    "[tag foo]#{[variable-2 $main]} { [property color]:[atom #000]; }");
+    "[tag foo]#{[variable-2 $hello]} { [property color]:[atom #000]; }");
 
   MT('interpolation_error',
     "[tag foo]#{[error foo]} { [property color]:[atom #000]; }");
@@ -79,7 +79,7 @@
     "[tag foo] { [property width]:[number 4] [operator /] [number 2] }");
 
   MT('nested_structure_with_id_selector',
-    "[tag p] { [builtin #main] { [property color]:[keyword red]; } }");
+    "[tag p] { [builtin #hello] { [property color]:[keyword red]; } }");
 
   MT('indent_mixin',
      "[def @mixin] [tag container] (",

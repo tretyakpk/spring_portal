@@ -23,7 +23,7 @@
      "[variable-2&formatting&formatting-list&formatting-list-ul - ][property&formatting&formatting-task [x]]][variable-2  foo]");
 
   MT("emInWordAsterisk",
-     "foo[em *bar*]main");
+     "foo[em *bar*]hello");
 
   MT("emInWordUnderscore",
      "foo_bar_hello");
@@ -48,28 +48,28 @@
   MT("taskListAsterisk",
      "[variable-2 * []] foo]", // Invalid; must have space or x between []
      "[variable-2 * [ ]]bar]", // Invalid; must have space after ]
-     "[variable-2 * [x]]main]", // Invalid; must have space after ]
+     "[variable-2 * [x]]hello]", // Invalid; must have space after ]
      "[variable-2 * ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links
      "    [variable-3 * ][property [x]]][variable-3  foo]"); // Valid; can be nested
 
   MT("taskListPlus",
      "[variable-2 + []] foo]", // Invalid; must have space or x between []
      "[variable-2 + [ ]]bar]", // Invalid; must have space after ]
-     "[variable-2 + [x]]main]", // Invalid; must have space after ]
+     "[variable-2 + [x]]hello]", // Invalid; must have space after ]
      "[variable-2 + ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links
      "    [variable-3 + ][property [x]]][variable-3  foo]"); // Valid; can be nested
 
   MT("taskListDash",
      "[variable-2 - []] foo]", // Invalid; must have space or x between []
      "[variable-2 - [ ]]bar]", // Invalid; must have space after ]
-     "[variable-2 - [x]]main]", // Invalid; must have space after ]
+     "[variable-2 - [x]]hello]", // Invalid; must have space after ]
      "[variable-2 - ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links
      "    [variable-3 - ][property [x]]][variable-3  foo]"); // Valid; can be nested
 
   MT("taskListNumber",
      "[variable-2 1. []] foo]", // Invalid; must have space or x between []
      "[variable-2 2. [ ]]bar]", // Invalid; must have space after ]
-     "[variable-2 3. [x]]main]", // Invalid; must have space after ]
+     "[variable-2 3. [x]]hello]", // Invalid; must have space after ]
      "[variable-2 4. ][meta [ ]]][variable-2  [world]]]", // Valid; tests reference style links
      "    [variable-3 1. ][property [x]]][variable-3  foo]"); // Valid; can be nested
 
@@ -92,16 +92,16 @@
      "foo be6a8cc1c1ecfe9489fb51e4869af15a13fc2cg2 bar");
 
   MT("userSHA",
-     "foo [link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] main");
+     "foo [link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] hello");
 
   MT("userSHAEmphasis",
      "[em *foo ][em&link bar@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");
 
   MT("userProjectSHA",
-     "foo [link bar/main@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] world");
+     "foo [link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2] world");
 
   MT("userProjectSHAEmphasis",
-     "[em *foo ][em&link bar/main@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");
+     "[em *foo ][em&link bar/hello@be6a8cc1c1ecfe9489fb51e4869af15a13fc2cd2][em *]");
 
   MT("num",
      "foo [link #1] bar");
@@ -110,19 +110,19 @@
      "[em *foo ][em&link #1][em *]");
 
   MT("badNum",
-     "foo #1bar main");
+     "foo #1bar hello");
 
   MT("userNum",
-     "foo [link bar#1] main");
+     "foo [link bar#1] hello");
 
   MT("userNumEmphasis",
      "[em *foo ][em&link bar#1][em *]");
 
   MT("userProjectNum",
-     "foo [link bar/main#1] world");
+     "foo [link bar/hello#1] world");
 
   MT("userProjectNumEmphasis",
-     "[em *foo ][em&link bar/main#1][em *]");
+     "[em *foo ][em&link bar/hello#1][em *]");
 
   MT("vanillaLink",
      "foo [link http://www.example.com/] bar");
@@ -142,7 +142,7 @@
      "[comment ```][link http://www.example.com/]");
 
   MT("notALink",
-     "[comment ``foo `bar` http://www.example.com/``] main");
+     "[comment ``foo `bar` http://www.example.com/``] hello");
 
   MT("notALink",
      "[comment `foo]",

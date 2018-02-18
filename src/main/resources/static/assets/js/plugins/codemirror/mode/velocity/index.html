@@ -37,7 +37,7 @@
    This is the second line
 *#
 
-#[[ main steve
+#[[ hello steve
    This has invalid syntax that would normally need "poor man's escaping" like:
 
    #define()
@@ -53,7 +53,7 @@
 
 #evaluate( 'string with VTL #if(true)will be displayed#end' )
 
-#define( $main ) Hello $who #end #set( $who = "World!") $main ## displays Hello World!
+#define( $hello ) Hello $who #end #set( $who = "World!") $hello ## displays Hello World!
 
 #foreach( $customer in $customerList )
 

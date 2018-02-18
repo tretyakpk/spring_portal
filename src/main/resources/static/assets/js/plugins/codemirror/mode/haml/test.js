@@ -16,7 +16,7 @@
      "[tag %h1][attribute #test] Hey There");
 
   MT("classSelector",
-     "[tag %h1][attribute .main] Hey There");
+     "[tag %h1][attribute .hello] Hey There");
 
   MT("docType",
      "[tag !!! XML]");

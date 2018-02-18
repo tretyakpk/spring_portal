@@ -2,6 +2,7 @@ package web.entity;
 
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +10,17 @@ public class User {
 
     @Id
     private String id;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String password;
+
     private String role;
+
     private Date createdAt;
+
     private List<ContentServiceProvider> contentServiceProviders;
 
     public User() {}

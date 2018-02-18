@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
-    <meta charset="utf-8">
-    <title>Title</title>
+    <title>SpringPortal</title>
+    <meta charset="utf-8" />
     <link th:href="@{/assets/css/bootstrap.min.css}"             rel="stylesheet" media="screen" >
     <link th:href="@{/assets/font-awesome/css/font-awesome.css}" rel="stylesheet" media="screen" >
     <link th:href="@{/assets/css/animate.css}"                   rel="stylesheet" media="screen">
     <link th:href="@{/assets/css/style.css}"                     rel="stylesheet" media="screen">
 </head>
 <body>
-    <nav class="navbar navbar-static-top" role="navigation" th:fragment="header">
+<div class="row border-bottom white-bg" th:fragment="navbar">
+    <nav class="navbar navbar-static-top" role="navigation">
         <div class="navbar-header">
             <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                 <i class="fa fa-reorder"></i>
@@ -19,7 +20,7 @@
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
                 <li class="active">
-                    <a aria-expanded="false" role="button" href="#"> Back to main Layout page</a>
+                    <a aria-expanded="false" role="button" href="layouts.html"> Back to main Layout page</a>
                 </li>
                 <li class="dropdown">
                     <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
@@ -61,16 +62,13 @@
             </ul>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
-                    <a href="">
-                        <form th:action="@{/logout}" class="form-inline" method="post">
-                            <i class="fa fa-sign-out"></i>
-                            <input class="text-primary text-only" type="submit" value="Sign Out"/>
-                        </form>
+                    <a href="../login.html">
+                        <i class="fa fa-sign-out"></i> Log out
                     </a>
                 </li>
-
             </ul>
         </div>
     </nav>
+</div>
 </body>
 </html>

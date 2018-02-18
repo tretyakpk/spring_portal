@@ -21,10 +21,10 @@
      "[tag h1][attribute&def #test] Hey There");
 
   MT("classShortcut",
-     "[attribute&qualifier .main] Hey There");
+     "[attribute&qualifier .hello] Hey There");
 
   MT("tagWithIdAndClassShortcuts",
-     "[tag h1][attribute&def #test][attribute&qualifier .main] Hey There");
+     "[tag h1][attribute&def #test][attribute&qualifier .hello] Hey There");
 
   MT("docType",
      "[keyword doctype] xml");

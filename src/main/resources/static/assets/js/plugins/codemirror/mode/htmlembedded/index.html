@@ -30,12 +30,12 @@
 <h2>Html Embedded Scripts mode</h2>
 <form><textarea id="code" name="code">
 <%
-function main(who) {
+function hello(who) {
 	return "Hello " + who;
 }
 %>
 This is an example of EJS (embedded javascript)
-<p>The program says <%= main("world") %>.</p>
+<p>The program says <%= hello("world") %>.</p>
 <script>
 	alert("And here is some normal JS code"); // also colored
 </script>

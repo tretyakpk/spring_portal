@@ -31,13 +31,13 @@
      "[tag foo] { [property margin]: [number 0] } [tag bar] { }");
 
   MT("tagStringNoQuotes",
-     "[tag foo] { [property font-family]: [variable main] [variable world]; }");
+     "[tag foo] { [property font-family]: [variable hello] [variable world]; }");
 
   MT("tagStringDouble",
-     "[tag foo] { [property font-family]: [string \"main world\"]; }");
+     "[tag foo] { [property font-family]: [string \"hello world\"]; }");
 
   MT("tagStringSingle",
-     "[tag foo] { [property font-family]: [string 'main world']; }");
+     "[tag foo] { [property font-family]: [string 'hello world']; }");
 
   MT("tagColorKeyword",
      "[tag foo] {",

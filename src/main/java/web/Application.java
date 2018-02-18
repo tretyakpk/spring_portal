@@ -11,4 +11,5 @@ public class Application extends WebMvcConfigurerAdapter {
 		SpringApplication.run(Application.class, args);
 	}
 
+
 }
