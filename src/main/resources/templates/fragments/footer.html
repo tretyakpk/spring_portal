@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+</head>
+<body>
+    <div th:fragment="footer" class="footer">
+        <div>
+            <strong>Copyright</strong> Purebros &copy; 2018
+        </div>
+    </div>
+
+    <div th:fragment="js">
+
+        <!-- Mainly scripts -->
+        <script th:src="@{/assets/js/jquery-3.1.1.min.js}"></script>
+        <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+        <script th:src="@{/assets/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+        <script th:src="@{/assets/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+
+        <!-- Custom and plugin javascript -->
+        <script th:src="@{/assets/js/plugins/pace/pace.min.js}"></script>
+        <script th:src="@{/assets/js/plugins/pace/pace.min.js}"></script>
+
+        <!-- Flot -->
+        <script th:src="@{/assets/js/plugins/flot/jquery.flot.js}"></script>
+        <script th:src="@{/assets/js/plugins/flot/jquery.flot.tooltip.min.js}"></script>
+        <script th:src="@{/assets/js/plugins/flot/jquery.flot.resize.js}"></script>
+
+        <!-- ChartJS-->
+        <script th:src="@{/assets/js/plugins/chartJs/Chart.min.js}"></script>
+
+        <!-- Peity -->
+        <script th:src="@{/assets/js/plugins/peity/jquery.peity.min.js}"></script>
+
+        <!-- Peity demo -->
+        <script th:src="@{/assets/js/demo/peity-demo.js}"></script>
+
+    </div>
+</body>
+</html>
+
