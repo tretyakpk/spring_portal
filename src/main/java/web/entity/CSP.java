@@ -1,20 +1,24 @@
 package web.entity;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
-
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class CSP {
 
     @Id
     private String id;
+
+    @NotEmpty
+    @NotNull
     private String name;
+
     private List<Link> links;
 
     public CSP() { }
 
     public CSP(String name, List<Link> links) {
-
         this.name = name;
         this.links = links;
     }

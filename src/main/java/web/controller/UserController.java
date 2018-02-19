@@ -32,10 +32,8 @@ public class UserController {
 
     @PostMapping(value = "/add")
     public String saveNew(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-
-        if(bindingResult.hasErrors()) {
-            return "user/form";
-        } else {
+        if(bindingResult.hasErrors()) return "user/form";
+        else {
             user.setCreatedAt(new Date());
             user.setRole("USER");
             userRepository.save(user);
@@ -52,9 +50,8 @@ public class UserController {
 
     @PostMapping(value = "edit/{id}")
     public String saveEdited(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()) {
-            return "user/form";
-        } else {
+        if(bindingResult.hasErrors()) return "user/form";
+        else {
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("message", "User added successfully!");
             return "redirect:/user/view/" + user.getId();
