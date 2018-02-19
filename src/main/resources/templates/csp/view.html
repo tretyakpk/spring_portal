@@ -19,7 +19,7 @@
                     <div th:text="${message}" class="alert alert-success">Success message</div>
                 </div>
                 <div th:if="${error}">
-                    <div th:text="${error}" class="alert alert-danger">Success message</div>
+                    <div th:text="${error}" class="alert alert-danger">Error message</div>
                 </div>
             </div>
             <div class="ibox-content">
@@ -41,6 +41,34 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+
+            <div class="ibox-title">
+                <h1 class="text-center" th:text="Links"></h1>
+                <div th:if="${linkmessage}">
+                    <div th:text="${linkmessage}" class="alert alert-success">Success message</div>
+                </div>
+                <div th:if="${linkerror}">
+                    <div th:text="${linkerror}" class="alert alert-danger">Error message</div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <form class="form-inline" th:action="@{'/csp/add/link/' + ${csp.id}}" th:object="${link}" >
+                    <div class="form-group col-sm-4">
+                        <label for="url1">Email</label>
+                        <input id="url1" type="text" placeholder="url" th:field="*{url}" class="form-control">
+                        <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}" th:class="help-block"></span>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <div class="form-check">
+                            <label class="form-check-label" for="status1">
+                                Status
+                            </label>
+                            <input class="form-check-input" type="checkbox" th:default="1" id="status1">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success"></button>
+                </form>
             </div>
         </div>
         <!-- END BODY -->
