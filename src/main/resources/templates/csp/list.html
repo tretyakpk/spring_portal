@@ -10,11 +10,11 @@
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-md-4 portal-button">
-                    <a th:href="@{user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
+                    <a th:href="@{csp/add}" class="btn btn-block btn-lg btn-success">NEW CSP</a>
                 </div>
             </div>
             <div class="ibox-title">
-                <h1 class="text-center" >Users list</h1>
+                <h1 class="text-center" >Content Service Providers list</h1>
                 <div th:if="${message}">
                     <div th:text="${message}" class="alert alert-success">Success message</div>
                 </div>
@@ -29,21 +29,19 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
-                                <th>Created At</th>
-                                <th>Role</th>
+                                <th>Created at</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="us : ${users}">
-                                <td th:text="${us.id}"></td>
-                                <td th:text="${us.name}"></td>
-                                <td th:text="${us.createdAt}"></td>
-                                <td th:text="${us.role}"></td>
+                            <tr th:each="csp : ${csps}">
+                                <td th:text="${csp.id}"></td>
+                                <td th:text="${csp.name}"></td>
+                                <td th:text="${csp.createdAt}"></td>
                                 <td>
-                                    <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
-                                    <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
-                                    <a th:href="@{'/user/delete/' + ${us.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                                    <a th:href="@{'/csp/view/' + ${csp.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
+                                    <a th:href="@{'/csp/edit/' + ${csp.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
+                                    <a th:href="@{'/csp/delete/' + ${csp.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
                                 </td>
                             </tr>
                         </tbody>

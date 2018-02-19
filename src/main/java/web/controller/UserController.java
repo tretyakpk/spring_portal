@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import web.entity.CSP;
 import web.entity.User;
 import web.repository.UserRepository;
 import javax.validation.Valid;
@@ -27,17 +28,17 @@ public class UserController {
     @GetMapping(value = "/add")
     public String newUser(Model model){
         model.addAttribute(new User());
-        return "user/form";
+        return "user/addform";
     }
 
     @PostMapping(value = "/add")
     public String saveNew(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()) return "user/form";
+        if(bindingResult.hasErrors()) return "user/addform";
         else {
             user.setCreatedAt(new Date());
             user.setRole("USER");
             userRepository.save(user);
-            redirectAttributes.addFlashAttribute("message", "User added successfully!");
+            redirectAttributes.addFlashAttribute("message", "User " + user.getName() + " added successfully!");
             return "redirect:/user/view/" + user.getId();
         }
     }
@@ -45,23 +46,27 @@ public class UserController {
     @GetMapping(value = "/edit/{id}")
     public String editUser(Model model, @PathVariable("id") String id){
         model.addAttribute(userRepository.findById(id));
-        return "user/form";
+        return "user/editform";
     }
 
-    @PostMapping(value = "edit/{id}")
+    @PostMapping(value = "/edit")
     public String saveEdited(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
-        if(bindingResult.hasErrors()) return "user/form";
+        if(bindingResult.hasErrors()) return "user/editform";
         else {
-            userRepository.save(user);
-            redirectAttributes.addFlashAttribute("message", "User added successfully!");
+            User user1 = userRepository.findOne(user.getId());
+
+            user1.setName(user.getName());
+            user1.setPassword(user.getPassword());
+
+            userRepository.save(user1);
+            redirectAttributes.addFlashAttribute("message", "User " + user1.getName() + " edited successfully!");
             return "redirect:/user/view/" + user.getId();
         }
     }
 
     @GetMapping("/view/{id}")
     public ModelAndView view(@PathVariable("id") String id){
-        User user = userRepository.findById(id);
-        return new ModelAndView("user/view").addObject(user);
+        return new ModelAndView("user/view").addObject("user", userRepository.findById(id));
     }
 
     @GetMapping("/delete/{id}")

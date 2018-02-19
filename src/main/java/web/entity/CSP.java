@@ -3,6 +3,7 @@ package web.entity;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 public class CSP {
@@ -15,6 +16,8 @@ public class CSP {
     private String name;
 
     private List<Link> links;
+
+    private Date createdAt;
 
     public CSP() { }
 
@@ -45,5 +48,13 @@ public class CSP {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }
