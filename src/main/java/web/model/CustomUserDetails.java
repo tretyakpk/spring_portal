@@ -1,28 +1,25 @@
-package web.entity;
+package web.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
-public class SecUserDetails extends User implements UserDetails {
+public class CustomUserDetails extends Users implements UserDetails {
 
-    @Autowired
-    private User user;
-
-    public SecUserDetails(final User user) {
-        super(user);
+    public CustomUserDetails(final Users users) {
+        super(users);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        Collection<? extends GrantedAuthority> roles = new HashSet<>();
-        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + user.getRole()));
-
-        return roles;
+        return getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
+                .collect(Collectors.toList());
     }
 
     @Override
