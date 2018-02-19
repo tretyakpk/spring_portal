@@ -43,10 +43,7 @@
                                 <td>
                                     <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
                                     <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
-                                    <form th:action="@{'/user/delete/' + ${us.id}}" th:type="post">
-                                        <input th:type="hidden" th:value="${us.id}" th:name="'id'">
-                                        <input th:type="submit" class="btn btn-sm btn-danger btn-icon fa fa-trash-o">
-                                    </form>
+                                    <a th:href="@{'/user/delete/' + ${us.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
                                 </td>
                             </tr>
                         </tbody>

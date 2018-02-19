@@ -29,34 +29,41 @@ public class UserController {
     }
 
     @GetMapping(value = "/add")
-    public String newUset(Model model){
+    public String newUser(Model model){
         User user = new User();
         model.addAttribute(user);
         return "user/form";
     }
 
+    @PostMapping(value = "/add")
+    public String saveNew(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+
+        if(bindingResult.hasErrors()) {
+            return "user/form";
+        } else {
+            user.setCreatedAt(new Date());
+            user.setRole("USER");
+            userRepository.save(user);
+            redirectAttributes.addFlashAttribute("message", "User added successfully!");
+            return "redirect:/user/view/" + user.getId();
+        }
+    }
+
     @GetMapping(value = "/edit/{id}")
-    public String newUset(Model model, @PathVariable("id") String id){
+    public String editUser(Model model, @PathVariable("id") String id){
         User user = userRepository.findById(id);
         model.addAttribute(user);
         return "user/form";
     }
 
-    @PostMapping(value = {"/add", "edit/{id}"})
-    public String save(@PathVariable("id") String id, @Valid User user, BindingResult result, RedirectAttributes redirectAttributes, HttpServletRequest request){
-
-        if(result.hasErrors())
+    @PostMapping(value = "edit/{id}")
+    public String saveEdited(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+        if(bindingResult.hasErrors()) {
             return "user/form";
-        else if(request.getRequestURL().toString().equals("/user/add")) {
-            user.setCreatedAt(new Date());
-            user.setRole("USER");
-            userRepository.save(user);
-            redirectAttributes.addFlashAttribute("message", "User added successfully!");
-            return "redirect:/user/list";
         } else {
             userRepository.save(user);
-            redirectAttributes.addFlashAttribute("message", "User edited successfully!");
-            return "redirect:/user/list";
+            redirectAttributes.addFlashAttribute("message", "User added successfully!");
+            return "redirect:/user/view/" + user.getId();
         }
     }
 
@@ -67,15 +74,15 @@ public class UserController {
         return modelAndView.addObject(user);
     }
 
-    @PostMapping("/delete")
-    public String delete(@RequestParam("id") String id, RedirectAttributes redirectAttributes){
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") String id, RedirectAttributes redirectAttributes){
         try {
             userRepository.delete(id);
             redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
-            return "redirect:/user/list";
+            return "redirect:/user";
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("error", "Something went wrong!");
-            return "redirect:/user/list";
+            return "redirect:/user";
         }
     }
 }
