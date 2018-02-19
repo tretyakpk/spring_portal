@@ -1,12 +1,13 @@
 package web.entity;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
+@EntityScan
 public class User {
 
     @Id
@@ -34,6 +35,15 @@ public class User {
         this.role = role;
         this.createdAt = createdAt;
         this.contentServiceProviders = contentServiceProviders;
+    }
+
+    public User(User user) {
+        this.id = user.getId();
+        this.name = user.getName();
+        this.password = user.getPassword();
+        this.role = user.getRole();
+        this.createdAt = user.getCreatedAt();
+        this.contentServiceProviders = user.getContentServiceProviders();
     }
 
 
