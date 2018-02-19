@@ -4,16 +4,16 @@ import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
-public class ContentServiceProvider {
+public class CSP {
 
     @Id
     private String id;
     private String name;
     private List<Link> links;
 
-    public ContentServiceProvider() { }
+    public CSP() { }
 
-    public ContentServiceProvider(String name, List<Link> links) {
+    public CSP(String name, List<Link> links) {
 
         this.name = name;
         this.links = links;

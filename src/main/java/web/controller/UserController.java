@@ -9,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.entity.User;
 import web.repository.UserRepository;
-
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -22,15 +21,12 @@ public class UserController {
 
     @GetMapping("")
     public ModelAndView list(){
-        ModelAndView modelAndView = new ModelAndView("user/list");
-        modelAndView.addObject("users", userRepository.findAll());
-        return modelAndView;
+        return new ModelAndView("user/list").addObject("users", userRepository.findAll());
     }
 
     @GetMapping(value = "/add")
     public String newUser(Model model){
-        User user = new User();
-        model.addAttribute(user);
+        model.addAttribute(new User());
         return "user/form";
     }
 
@@ -50,8 +46,7 @@ public class UserController {
 
     @GetMapping(value = "/edit/{id}")
     public String editUser(Model model, @PathVariable("id") String id){
-        User user = userRepository.findById(id);
-        model.addAttribute(user);
+        model.addAttribute(userRepository.findById(id));
         return "user/form";
     }
 
@@ -69,8 +64,7 @@ public class UserController {
     @GetMapping("/view/{id}")
     public ModelAndView view(@PathVariable("id") String id){
         User user = userRepository.findById(id);
-        ModelAndView modelAndView = new ModelAndView("user/view");
-        return modelAndView.addObject(user);
+        return new ModelAndView("user/view").addObject(user);
     }
 
     @GetMapping("/delete/{id}")

@@ -23,18 +23,18 @@ public class User {
 
     private Date createdAt;
 
-    private List<ContentServiceProvider> contentServiceProviders;
+    private List<CSP> CSPS;
 
     public User() {}
 
-    public User(String id, String name, String password, String role, Date createdAt, List<ContentServiceProvider> contentServiceProviders) {
+    public User(String id, String name, String password, String role, Date createdAt, List<CSP> CSPS) {
 
         this.id = id;
         this.name = name;
         this.password = password;
         this.role = role;
         this.createdAt = createdAt;
-        this.contentServiceProviders = contentServiceProviders;
+        this.CSPS = CSPS;
     }
 
     public User(User user) {
@@ -43,13 +43,13 @@ public class User {
         this.password = user.getPassword();
         this.role = user.getRole();
         this.createdAt = user.getCreatedAt();
-        this.contentServiceProviders = user.getContentServiceProviders();
+        this.CSPS = user.getCSPS();
     }
 
 
     public String toString() {
         return String.format(
-                "User[id=%s, name='%s', password='%s'm role='%s', createdAt='%s']",
+                "User[id=%s, name='%s', password='%s' role='%s', createdAt='%s']",
                 id, name, password, role, createdAt.toString());
     }
 
@@ -93,12 +93,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public List<ContentServiceProvider> getContentServiceProviders() {
-        return contentServiceProviders;
+    public List<CSP> getCSPS() {
+        return CSPS;
     }
 
-    public void setContentServiceProviders(List<ContentServiceProvider> contentServiceProviders) {
-        this.contentServiceProviders = contentServiceProviders;
+    public void setCSPS(List<CSP> CSPS) {
+        this.CSPS = CSPS;
     }
 
 

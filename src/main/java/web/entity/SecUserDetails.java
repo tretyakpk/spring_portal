@@ -2,9 +2,10 @@ package web.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
+import java.util.*;
 
 public class SecUserDetails extends User implements UserDetails {
 
@@ -17,7 +18,11 @@ public class SecUserDetails extends User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+
+        Collection<? extends GrantedAuthority> roles = new HashSet<>();
+        roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+
+        return roles;
     }
 
     @Override
