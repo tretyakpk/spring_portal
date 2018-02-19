@@ -8,8 +8,19 @@
         <div th:replace="~{fragments/header :: navbar}"></div>
         <!-- BODY: -->
         <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-md-4 portal-button">
+                    <a href="user/add" class="btn btn-block btn-lg btn-success">NEW USER</a>
+                </div>
+            </div>
             <div class="ibox-title">
                 <h1 class="text-center" th:text="${user.name}"></h1>
+                <div th:if="${message}">
+                    <div th:text="${message}" class="alert alert-success">Success message</div>
+                </div>
+                <div th:if="${error}">
+                    <div th:text="${error}" class="alert alert-danger">Success message</div>
+                </div>
             </div>
             <div class="ibox-content">
                 <div class="table-responsive">

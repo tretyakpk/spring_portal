@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="top-navigation">
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <!-- HEADER -->
+        <div th:replace="~{fragments/header :: navbar}"></div>
+        <!-- BODY: -->
+        <div class="wrapper wrapper-content">
+            <div class="row">
+                <div class="col-md-4 portal-button">
+                    <a href="user/add" class="btn btn-block btn-lg btn-success">NEW USER</a>
+                </div>
+            </div>
+            <div class="ibox-title">
+                <h1 class="text-center" >Users list</h1>
+                <div th:if="${message}">
+                    <div th:text="${message}" class="alert alert-success">Success message</div>
+                </div>
+                <div th:if="${error}">
+                    <div th:text="${error}" class="alert alert-danger">Success message</div>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable-actions">
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Created At</th>
+                                <th>Role</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="us : ${users}">
+                                <td th:text="${us.id}"></td>
+                                <td th:text="${us.name}"></td>
+                                <td th:text="${us.createdAt}"></td>
+                                <td th:text="${us.role}"></td>
+                                <td>
+                                    <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
+                                    <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
+                                    <form th:action="@{'/user/delete/' + ${us.id}}" th:type="post">
+                                        <input th:type="hidden" th:value="${us.id}" th:name="'id'">
+                                        <input th:type="submit" class="btn btn-sm btn-danger btn-icon fa fa-trash-o">
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- END BODY -->
+        <!-- FOOTER -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: js}"></div>
+</body>
+</html>

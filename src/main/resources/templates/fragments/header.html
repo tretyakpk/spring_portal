@@ -7,6 +7,8 @@
     <link th:href="@{/assets/font-awesome/css/font-awesome.css}" rel="stylesheet" media="screen" >
     <link th:href="@{/assets/css/animate.css}"                   rel="stylesheet" media="screen">
     <link th:href="@{/assets/css/style.css}"                     rel="stylesheet" media="screen">
+    <link th:src="@{/assets/css/plugins/sweetalert/sweetalert.css}" rel="stylesheet" media="screen">
+
 </head>
 <body>
 <div class="row border-bottom white-bg" th:fragment="navbar">
@@ -19,8 +21,8 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li class="active">
-                    <a aria-expanded="false" role="button" href="layouts.html"> Back to main Layout page</a>
+                <li>
+                    <a aria-expanded="false" role="button" href="/user">USERS</a>
                 </li>
                 <li class="dropdown">
                     <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
@@ -31,34 +33,6 @@
                         <li><a href="">Menu item</a></li>
                     </ul>
                 </li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                    </ul>
-                </li>
-
             </ul>
             <ul class="nav navbar-top-links navbar-right">
                 <li>

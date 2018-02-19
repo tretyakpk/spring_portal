@@ -1,5 +1,6 @@
 package web.entity;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
@@ -11,10 +12,10 @@ public class User {
     @Id
     private String id;
 
-    @NotNull
+    @NotEmpty
     private String name;
 
-    @NotNull
+    @NotEmpty
     private String password;
 
     private String role;
