@@ -10,7 +10,7 @@
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-md-4 portal-button">
-                    <a th:href="@{user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
+                    <a th:href="@{/user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
                 </div>
             </div>
             <div class="ibox-title">
@@ -46,6 +46,28 @@
                                 <th>Created at</th>
                                 <td th:text="${user.createdAt}"></td>
                             </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable-actions">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Msisdn</th>
+                            <th>Created at</th>
+                            <th>Parameters</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="lg : ${logs}">
+                            <td th:text="${lg.id}"></td>
+                            <td th:text="${lg.msisdn}"></td>
+                            <td th:text="${lg.created_at}"></td>
+                            <td th:text="${lg.parameters}"></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

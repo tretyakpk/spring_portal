@@ -14,8 +14,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.enreachment.CryptoData;
 import web.model.CustomUserDetails;
 import web.model.Log;
+import web.model.Role;
 import web.model.User;
 import web.repository.LogRepository;
+import web.repository.RoleRepository;
 import web.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,9 @@ public class UserController {
 
     @Autowired
     private LogRepository logRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private Environment env;
@@ -61,6 +66,7 @@ public class UserController {
         if(bindingResult.hasErrors()) return "user/addform";
         else {
             user.setCreatedAt(new Date());
+            user.setRoles(roleRepository.findByRole("USER"));
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("message", "User " + user.getName() + " added successfully!");
             return "redirect:/user/view/" + user.getId();
@@ -89,8 +95,13 @@ public class UserController {
     }
 
     @GetMapping("/view/{id}")
-    public ModelAndView view(@PathVariable("id") Integer id){
-        return new ModelAndView("user/view").addObject("user", userRepository.findOne(id));
+    public String view(@PathVariable("id") Integer id, Model model){
+
+        User user = userRepository.findOne(id);
+        model.addAttribute("user", user);
+        model.addAttribute("logs", logRepository.findAllByUserOrderByIdDesc(user));
+
+        return "user/view";
     }
 
     @GetMapping("/delete/{id}")

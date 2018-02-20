@@ -1,6 +1,7 @@
 package web.model;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -17,6 +18,12 @@ public class CSP {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "created_at")
+    private Date createdAt;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "csp")
+    private Set<Link> links;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "csp")
     private Set<Parameter> parameters;
@@ -51,5 +58,29 @@ public class CSP {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(Set<Link> links) {
+        this.links = links;
+    }
+
+    public Set<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Set<Parameter> parameters) {
+        this.parameters = parameters;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

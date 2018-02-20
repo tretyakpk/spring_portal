@@ -10,7 +10,7 @@
         <div class="wrapper wrapper-content">
             <div class="row">
                 <div class="col-md-4 portal-button">
-                    <a th:href="@{/user/add}" class="btn btn-block btn-lg btn-success">NEW CSP</a>
+                    <a th:href="@{/csp/add}" class="btn btn-block btn-lg btn-success">NEW CSP</a>
                 </div>
             </div>
             <div class="ibox-title">
@@ -43,39 +43,115 @@
                 </div>
             </div>
 
-            <div class="ibox-title">
-                <h1 class="text-center" th:text="Links"></h1>
-                <div th:if="${linkmessage}">
-                    <div th:text="${linkmessage}" class="alert alert-success">Success message</div>
-                </div>
-                <div th:if="${linkerror}">
-                    <div th:text="${linkerror}" class="alert alert-danger">Error message</div>
-                </div>
-            </div>
             <div class="ibox-content">
-                <form class="form-inline" th:action="@{'/csp/add/link/' + ${csp.id}}" th:object="${link}" >
-                    <div class="form-group col-sm-4">
-                        <label for="url1">Email</label>
-                        <input id="url1" type="text" placeholder="url" th:field="*{url}" class="form-control">
-                        <span th:if="${#fields.hasErrors('url')}" th:errors="*{url}" th:class="help-block"></span>
+                <form action="#" class="form-horizontal">
+                    <div id="addlinks" class="col-md-1 btn btn-primary m-b-0 mx-auto">
+                        Send
                     </div>
-                    <div class="form-group col-sm-4">
-                        <div class="form-check">
-                            <label class="form-check-label" for="status1">
-                                Status
-                            </label>
-                            <input class="form-check-input" type="checkbox" th:default="1" id="status1">
+                    <div class="col-md-2">
+                        <div class="input-group bootstrap-touchspin">
+                            <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-success"></button>
+                    <div class="col-sm-9">
+                        <div id="links">
+                            <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
+                        </div>
+                    </div>
                 </form>
+                </div>
             </div>
+
+            <!--<div class="ibox-title">-->
+                <!--<h1 class="text-center" th:text="Links"></h1>-->
+                <!--<div th:if="${linkmessage}">-->
+                    <!--<div th:text="${linkmessage}" class="alert alert-success">Success message</div>-->
+                <!--</div>-->
+                <!--<div th:if="${linkerror}">-->
+                    <!--<div th:text="${linkerror}" class="alert alert-danger">Error message</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="ibox-content">-->
+                <!--<form class="form-inline" th:action="@{'/csp/add/link/' + ${csp.id}}" th:object="${link}" >-->
+                    <!--<div class="form-group col-sm-4">-->
+                        <!--<label for="url1">Email</label>-->
+                        <!--<input id="url1" type="text" placeholder="url" th:field="*{url}" class="form-control">-->
+                        <!--<span th:if="${#fields.hasErrors('url')}" th:errors="*{url}" th:class="help-block"></span>-->
+                    <!--</div>-->
+                    <!--<div class="form-group col-sm-4">-->
+                        <!--<div class="form-check">-->
+                            <!--<label class="form-check-label" for="status1">-->
+                                <!--Status-->
+                            <!--</label>-->
+                            <!--<input class="form-check-input" type="checkbox" th:default="1" id="status1">-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<button type="submit" class="btn btn-success"></button>-->
+                <!--</form>-->
+            <!--</div>-->
         </div>
         <!-- END BODY -->
+        <div th:replace="~{fragments/footer :: js}"></div>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $(".touchspin3").TouchSpin({
+                    min: 1,
+                    max: 20,
+                    verticalbuttons: true,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+                $("input#addlinkfield").change(function () {
+                    var inputValue = $("input#addlinkfield").val();
+                    inputValue++;
+                    var ln = $("input#link" + inputValue);
+                    if(ln.length){
+                        ln.remove();
+                    } else {
+                        inputValue--;
+                        var linkHtml = '<div  class="form-group"><input id="link' + inputValue + '" type="text" placeholder="link' + inputValue + '" class="link-input form-control"></div>';
+                        $("#links").append(linkHtml);
+                    }
+                });
+
+                $("#addlinks").click(function (e) {
+
+                    var links = {};
+                    $("input.link-input").each(function () {
+                        if ($(this).val())
+                            links[$(this).attr("id")] = $(this).val();
+                    });
+
+                    if (!jQuery.isEmptyObject(links)) {
+                        $.ajax({
+                            type: "POST",
+                            url: "http:127.0.0.1:8002/link/save",
+                            data: {
+                                links: $('select#portal').val(),
+                            },
+                            success: function (result) {
+                                console.log(result)
+                            },
+                            error: function (result) {
+                                console.log(result);
+                                alert('Oops. Error.');
+                            }
+                        });
+                    } else {
+                        alert("Please fields");
+                    }
+
+                });
+
+
+            });
+        </script>
+
         <!-- FOOTER -->
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: js}"></div>
 </body>
 </html>
