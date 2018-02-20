@@ -24,7 +24,8 @@
             </div>
             <div class="ibox-content">
                 <form th:action="@{/csp/add}" th:object="${csp}"  class="form-horizontal" method="post">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error'"><label class="col-lg-2 control-label">Name</label>
+                    <div class="form-group control-label" th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
+                        <label class="col-lg-2 control-label">Name</label>
                         <div class="col-lg-10"><input type="text" placeholder="name" th:field="*{name}" class="form-control">
                             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:class="help-block"></span>
                         </div>

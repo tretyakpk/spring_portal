@@ -11,6 +11,7 @@ import web.model.CSP;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
 
+import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.util.Date;
 
@@ -26,17 +27,21 @@ public class CSPController {
 
     @GetMapping("")
     public String list(Model model) {
-
         model.addAttribute("csps", CSPRepository.findAll());
-
         return "csp/list";
     }
 
     @GetMapping("/view/{id}")
-    public ModelAndView view(@PathVariable("id") Integer id){
-        ModelAndView modelAndView = new ModelAndView("csp/view");
-        modelAndView.addObject("csp", CSPRepository.findOne(id));
-        return modelAndView;
+    public String view(@PathVariable("id") Integer id, Model model){
+
+        CSP csp = CSPRepository.findOne(id);
+        if(csp == null)
+            return "redirect:/csp/list";
+
+        model.addAttribute("csp", csp);
+        model.addAttribute("links", linkRepository.findAllByCspOrderByIdDesc(csp));
+
+        return "csp/view";
     }
 
 

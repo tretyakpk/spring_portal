@@ -1,5 +1,7 @@
 package web.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
@@ -27,6 +29,9 @@ public class CSP {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "csp")
     private Set<Parameter> parameters;
+
+    @ManyToMany(mappedBy = "csps")
+    private Set<User> users;
 
     public CSP() {
     }

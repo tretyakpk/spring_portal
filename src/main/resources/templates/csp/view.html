@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="~{fragments/header :: head}"></head>
 <body class="top-navigation">
 <div id="wrapper">
@@ -42,58 +43,63 @@
                     </table>
                 </div>
             </div>
-
             <div class="ibox-content">
-                <form action="#" class="form-horizontal">
-                    <div id="addlinks" class="col-md-1 btn btn-primary m-b-0 mx-auto">
-                        Send
+                <div class="col-lg-12">
+                    <div class="row">
+                        <form action="#" class="form-horizontal">
+                            <div id="addlinks" class="col-md-1 btn btn-primary m-b-0 mx-auto">
+                                Send
+                            </div>
+                            <div class="col-md-2">
+                                <div class="input-group bootstrap-touchspin">
+                                    <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
+                                </div>
+                            </div>
+                            <div class="col-sm-9">
+                                <div id="links">
+                                    <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="col-md-2">
-                        <div class="input-group bootstrap-touchspin">
-                            <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
-                        </div>
-                    </div>
-                    <div class="col-sm-9">
-                        <div id="links">
-                            <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
-                        </div>
-                    </div>
-                </form>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover dataTable-actions">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Url</th>
+                            <th>Active</th>
+                            <th>Created at</th>
+                            <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="ln : ${links}">
+                            <td th:text="${ln.id}"></td>
+                            <td><a th:utext="${ln.url}"></a></td>
+                            <td th:text="${ln.active} ? 'true' : false"></td>
+                            <td th:text="${ln.createdAt}"></td>
+                            <td sec:authorize="hasRole('ADMIN')">
+                                <a th:href="@{'/link/delete/' + ${csp.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                            </td>
+                            <td>
+                                <a th:href="@{'/csp/delete/' + ${csp.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!--<div class="ibox-title">-->
-                <!--<h1 class="text-center" th:text="Links"></h1>-->
-                <!--<div th:if="${linkmessage}">-->
-                    <!--<div th:text="${linkmessage}" class="alert alert-success">Success message</div>-->
-                <!--</div>-->
-                <!--<div th:if="${linkerror}">-->
-                    <!--<div th:text="${linkerror}" class="alert alert-danger">Error message</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="ibox-content">-->
-                <!--<form class="form-inline" th:action="@{'/csp/add/link/' + ${csp.id}}" th:object="${link}" >-->
-                    <!--<div class="form-group col-sm-4">-->
-                        <!--<label for="url1">Email</label>-->
-                        <!--<input id="url1" type="text" placeholder="url" th:field="*{url}" class="form-control">-->
-                        <!--<span th:if="${#fields.hasErrors('url')}" th:errors="*{url}" th:class="help-block"></span>-->
-                    <!--</div>-->
-                    <!--<div class="form-group col-sm-4">-->
-                        <!--<div class="form-check">-->
-                            <!--<label class="form-check-label" for="status1">-->
-                                <!--Status-->
-                            <!--</label>-->
-                            <!--<input class="form-check-input" type="checkbox" th:default="1" id="status1">-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<button type="submit" class="btn btn-success"></button>-->
-                <!--</form>-->
-            <!--</div>-->
-        </div>
         <!-- END BODY -->
         <div th:replace="~{fragments/footer :: js}"></div>
 
-        <script type="text/javascript">
+        <script th:inline="javascript">
+            /*<![CDATA[*/
             $(document).ready(function(){
                 $(".touchspin3").TouchSpin({
                     min: 1,
@@ -117,36 +123,39 @@
                 });
 
                 $("#addlinks").click(function (e) {
-
-                    var links = {};
+                    var lls = [];
                     $("input.link-input").each(function () {
-                        if ($(this).val())
-                            links[$(this).attr("id")] = $(this).val();
+                        if($(this).val())
+                            lls.push({
+                                "url":$(this).val()
+                            });
                     });
 
-                    if (!jQuery.isEmptyObject(links)) {
+                    var toSend = JSON.stringify(lls);
+
+                    if (toSend) {
+                        console.log(toSend);
                         $.ajax({
+                            data: toSend,
                             type: "POST",
-                            url: "http:127.0.0.1:8002/link/save",
-                            data: {
-                                links: $('select#portal').val(),
-                            },
-                            success: function (result) {
-                                console.log(result)
+                            url: "/link/add/" + [[${csp.id}]],
+                            dataType : "json",
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                location.reload();
                             },
                             error: function (result) {
-                                console.log(result);
-                                alert('Oops. Error.');
+                                alert("Can't save links!")
                             }
                         });
                     } else {
-                        alert("Please fields");
+                        alert("Data is empty!");
                     }
 
                 });
 
-
-            });
+                });
+            /*]]>*/
         </script>
 
         <!-- FOOTER -->

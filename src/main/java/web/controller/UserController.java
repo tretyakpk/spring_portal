@@ -9,12 +9,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.enreachment.CryptoData;
 import web.model.CustomUserDetails;
 import web.model.Log;
-import web.model.Role;
 import web.model.User;
 import web.repository.LogRepository;
 import web.repository.RoleRepository;
@@ -46,10 +44,9 @@ public class UserController {
     @GetMapping("")
     public String list(Model model){
 
-        if(!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
-            return "redirect:" + env.getProperty("wind.enreachment");
-
-        log();
+//        if(!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
+//            return "redirect:" + env.getProperty("wind.enreachment");
+//        log();
 
         model.addAttribute("users", userRepository.findAll());
         return "user/list";

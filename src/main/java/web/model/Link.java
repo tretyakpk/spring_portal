@@ -1,5 +1,7 @@
 package web.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -16,17 +18,42 @@ public class Link {
     private String url;
 
     @Column(name = "active")
-    private int active;
+    private int active = 1;
 
     @Column(name = "created_at")
-    private Date created_at;
+    private Date createdAt = new Date();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "csp_id", nullable = false)
+    @JsonBackReference
     private CSP csp;
 
     public Link() {
     }
+
+    public Link(String url) {
+        this.url = url;
+    }
+
+    public Link(String url, int active, Date created_at, CSP csp) {
+        this.url = url;
+        this.active = active;
+        this.createdAt = created_at;
+        this.csp = csp;
+    }
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", active=" + active +
+                ", created_at=" + createdAt +
+                ", csp=" + csp +
+                '}';
+    }
+
+
 
     public int getId() {
         return id;
@@ -52,12 +79,12 @@ public class Link {
         this.active = active;
     }
 
-    public Date getCreated_at() {
-        return created_at;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(Date created_at) {
+        this.createdAt = created_at;
     }
 
     public CSP getCsp() {
