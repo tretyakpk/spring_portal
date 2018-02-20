@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class CustomUserDetails extends Users implements UserDetails {
+public class CustomUserDetails extends User implements UserDetails {
 
-    public CustomUserDetails(final Users users) {
+    public CustomUserDetails(final User users) {
         super(users);
     }
 
@@ -18,7 +18,7 @@ public class CustomUserDetails extends Users implements UserDetails {
 
         return getRoles()
                 .stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
+                .map(role -> new SimpleGrantedAuthority(role.getRole()))
                 .collect(Collectors.toList());
     }
 

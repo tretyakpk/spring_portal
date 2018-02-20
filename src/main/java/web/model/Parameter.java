@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "parameters")
-public class Parameters {
+public class Parameter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,7 +23,7 @@ public class Parameters {
     @JoinColumn(name = "csp_id", nullable = false)
     private CSP csp;
 
-    public Parameters() {
+    public Parameter() {
     }
 }
 

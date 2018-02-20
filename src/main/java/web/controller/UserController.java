@@ -1,38 +1,80 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.model.Users;
-import web.repository.UsersRepository;
+import web.enreachment.CryptoData;
+import web.model.CustomUserDetails;
+import web.model.Log;
+import web.model.User;
+import web.repository.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
+import java.security.Principal;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
-    private UsersRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @GetMapping("")
-    public ModelAndView list(){
-        return new ModelAndView("user/list").addObject("users", userRepository.findAll());
+    public String list(Model model){
+
+        if(!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
+            return "redirect:" + env.getProperty("wind.enreachment");
+
+        String msisdn = CryptoData.getMsisdn(request, env);
+        System.out.println(msisdn);
+
+        Enumeration<String> headers = request.getHeaderNames();
+        HashMap<String, String> headersMap = new HashMap<>();
+        while (headers.hasMoreElements()) {
+            String name = headers.nextElement();
+            headersMap.put( name, request.getHeader(name));
+        }
+
+        // works
+        System.out.println(request.getRequestURL());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        System.out.println(userDetails.getId());
+
+        User user = userRepository.findOne(userDetails.getId());
+
+
+
+        model.addAttribute("users", userRepository.findAll());
+        return "user/list";
     }
 
     @GetMapping(value = "/add")
     public String newUser(Model model){
-        model.addAttribute("user", new Users());
+        model.addAttribute("user", new User());
         return "user/addform";
     }
 
     @PostMapping(value = "/add")
-    public String saveNew(@Valid Users user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String saveNew(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "user/addform";
         else {
             user.setCreatedAt(new Date());
@@ -49,10 +91,10 @@ public class UserController {
     }
 
     @PostMapping(value = "/edit")
-    public String saveEdited(@Valid Users user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    public String saveEdited(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "user/editform";
         else {
-            Users user1 = userRepository.findOne(user.getId());
+            User user1 = userRepository.findOne(user.getId());
 
             user1.setName(user.getName());
             user1.setPassword(user.getPassword());
@@ -78,5 +120,9 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", "Something went wrong!");
             return "redirect:/user";
         }
+    }
+
+    private static void log(){
+
     }
 }

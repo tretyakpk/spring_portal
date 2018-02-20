@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,21 +29,21 @@ public class Users {
     private int active;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<Logs> logs;
+    private Set<Log> logs;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Roles> roles;
+    private Set<Role> roles;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_csp", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "csp_id"))
     private Set<CSP> csps;
 
-    public Users() {
+    public User() {
 
     }
 
-    public Users(Users users) {
+    public User(User users) {
         this.id = users.getId();
         this.name = users.getName();
         this.password = users.getPassword();
@@ -52,7 +52,6 @@ public class Users {
         this.csps = users.getCsps();
         this.createdAt = users.getCreatedAt();
         this.logs = users.getLogs();
-
     }
 
     public int getId() {
@@ -87,11 +86,11 @@ public class Users {
         this.active = active;
     }
 
-    public Set<Roles> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Roles> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
@@ -111,11 +110,11 @@ public class Users {
         this.createdAt = createdAt;
     }
 
-    public Set<Logs> getLogs() {
+    public Set<Log> getLogs() {
         return logs;
     }
 
-    public void setLogs(Set<Logs> logs) {
+    public void setLogs(Set<Log> logs) {
         this.logs = logs;
     }
 }

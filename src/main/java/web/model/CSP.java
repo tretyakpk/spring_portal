@@ -19,7 +19,7 @@ public class CSP {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "csp")
-    private Set<Parameters> parameters;
+    private Set<Parameter> parameters;
 
     public CSP() {
     }

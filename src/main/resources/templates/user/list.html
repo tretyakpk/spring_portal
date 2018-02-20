@@ -29,8 +29,8 @@
                             <tr>
                                 <th>Id</th>
                                 <th>Name</th>
+                                <th>Active</th>
                                 <th>Created At</th>
-                                <th>Role</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -38,6 +38,7 @@
                             <tr th:each="us : ${users}">
                                 <td th:text="${us.id}"></td>
                                 <td th:text="${us.name}"></td>
+                                <td th:text="${us.active} ? 'true' : 'false'"></td>
                                 <td th:text="${us.createdAt}"></td>
                                 <td>
                                     <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>

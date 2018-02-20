@@ -5,7 +5,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "logs")
-public class Logs {
+public class Log {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,8 +23,8 @@ public class Logs {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private User user;
 
-    public Logs() {
+    public Log() {
     }
 }

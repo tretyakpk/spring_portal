@@ -38,9 +38,9 @@
                                 <th>Password</th>
                                 <td th:text="${user.password}"></td>
                             </tr>
-                            <tr>
-                                <th>Role</th>
-                                <td th:text="${user.role}"></td>
+                            <tr >
+                                <th>Active</th>
+                                <td th:text="${user.active} ? 'true' : 'false'"></td>
                             </tr>
                             <tr>
                                 <th>Created at</th>
