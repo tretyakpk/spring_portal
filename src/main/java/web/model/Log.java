@@ -10,7 +10,10 @@ public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "log_id")
-    private int roleId;
+    private int id;
+
+    @Column(name = "msisdn", length = 32)
+    private String msisdn;
 
     @Column(name = "type")
     private String type;
@@ -18,7 +21,7 @@ public class Log {
     @Column(name = "created_at")
     private Date created_at;
 
-    @Column(name = "parameters")
+    @Column(name = "parameters", length = 1023)
     private String parameters;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,5 +29,54 @@ public class Log {
     private User user;
 
     public Log() {
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public String getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMsisdn() {
+        return msisdn;
+    }
+
+    public void setMsisdn(String msisdn) {
+        this.msisdn = msisdn;
     }
 }

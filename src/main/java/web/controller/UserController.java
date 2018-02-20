@@ -1,8 +1,9 @@
 package web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,11 @@ import web.enreachment.CryptoData;
 import web.model.CustomUserDetails;
 import web.model.Log;
 import web.model.User;
+import web.repository.LogRepository;
 import web.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -27,6 +28,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LogRepository logRepository;
 
     @Autowired
     private Environment env;
@@ -40,28 +44,7 @@ public class UserController {
         if(!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
             return "redirect:" + env.getProperty("wind.enreachment");
 
-        String msisdn = CryptoData.getMsisdn(request, env);
-        System.out.println(msisdn);
-
-        Enumeration<String> headers = request.getHeaderNames();
-        HashMap<String, String> headersMap = new HashMap<>();
-        while (headers.hasMoreElements()) {
-            String name = headers.nextElement();
-            headersMap.put( name, request.getHeader(name));
-        }
-
-        // works
-        System.out.println(request.getRequestURL());
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        System.out.println(userDetails.getId());
-
-        User user = userRepository.findOne(userDetails.getId());
-
-
+        log();
 
         model.addAttribute("users", userRepository.findAll());
         return "user/list";
@@ -122,7 +105,45 @@ public class UserController {
         }
     }
 
-    private static void log(){
+    private User getUser(){
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findOne(userDetails.getId());
+    }
 
+    private void log(){
+
+        HashMap<String, Object> forLog     = new HashMap<>();
+        HashMap<String, String> mapHeaders = new HashMap<>();
+        HashMap<String, String> mapGet     = new HashMap<>();
+
+        Enumeration<String> headers = request.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String name = headers.nextElement();
+            mapHeaders.put( name, request.getHeader(name));
+        }
+
+        Enumeration<String> get = request.getParameterNames();
+        while (get.hasMoreElements()) {
+            String name = get.nextElement();
+            mapGet.put( name, request.getParameter(name));
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            forLog.put("url", request.getRequestURL());
+            forLog.put("headers", mapHeaders);
+            forLog.put("get",     mapGet);
+
+            String json = objectMapper.writeValueAsString(forLog);
+
+            Log log = new Log();
+            log.setCreated_at(new Date());
+            log.setParameters(json);
+            log.setMsisdn(CryptoData.getMsisdn(request, env));
+            log.setUser(getUser());
+            System.out.println(log.getId());
+            logRepository.save(log);
+        }
+        catch (JsonProcessingException e) { System.out.println(e.getMessage());}
     }
 }
