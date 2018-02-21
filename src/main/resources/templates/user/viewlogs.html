@@ -6,75 +6,47 @@
 <div id="wrapper">
     <div id="page-wrapper" class="gray-bg">
         <!-- HEADER -->
-        <div th:replace="~{fragments/header :: navbar}"></div>
+        <div class="row border-bottom white-bg" th:fragment="navbar">
+            <nav class="navbar navbar-static-top" role="navigation">
+                <div class="navbar-header">
+                    <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+                        <i class="fa fa-reorder"></i>
+                    </button>
+                    <a th:href="@{/}" class="navbar-brand">CSPS</a>
+                </div>
+                <div class="navbar-collapse collapse" id="navbar">
+                    <ul class="nav navbar-nav">
+                        <li sec:authorize="hasRole('ADMIN')">
+                            <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
+                        </li>
+                        <li sec:authorize="hasRole('USER')">
+                            <a aria-expanded="false" role="button" th:href="@{/user/logs}">LOGS</a>
+                        </li>
+                        <li th:each="csp : ${csps}" sec:authorize="hasRole('USER')">
+                            <a th:href="@{'/csp/view/' + ${csp.id}}" th:text="@{${#strings.toUpperCase(csp.name)}}" aria-expanded="false" role="button"></a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li  th:inline="text">
+                            [[${#httpServletRequest.remoteUser}]]
+                        </li>
+                        <li>
+                            <a href="/logout">
+                                <i class="fa fa-sign-out">
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
         <!-- BODY: -->
         <div class="wrapper wrapper-content">
-            <div class="row">
-                <div class="col-md-4 portal-button">
-                    <a th:href="@{/user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
-                </div>
-            </div>
+
             <div class="ibox-title">
-                <h1 class="text-center" th:text="${user.name}"></h1>
-                <div th:if="${message}">
-                    <div th:text="${message}" class="alert alert-success">Success message</div>
-                </div>
-                <div th:if="${error}">
-                    <div th:text="${error}" class="alert alert-danger">Success message</div>
-                </div>
-            </div>
-            <div class="ibox-content">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered table-hover dataTable-actions">
-                        <tbody>
-                            <tr>
-                                <th>Id</th>
-                                <td th:text="${user.id}"></td>
-                            </tr>
-                            <tr >
-                                <th>Name</th>
-                                <td th:text="${user.name}"></td>
-                            </tr>
-                            <tr >
-                                <th>Password</th>
-                                <td th:text="${user.password}"></td>
-                            </tr>
-                            <tr >
-                                <th>Active</th>
-                                <td th:text="${user.active} ? 'true' : 'false'"></td>
-                            </tr>
-                            <tr>
-                                <th>Created at</th>
-                                <td th:text="${user.createdAt}"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="ibox-content">
-                
-                <div class="row">
-                    <!-- form with all csps -->
-                    <div class="col-md-6">
-                        <div th:each="notUserCsp : ${notUserCsps}" class="m-l m-b">
-                            <a class="btn btn-success m-r"  th:href="@{'/user/' + ${user.id} + '/add/csp/' + ${notUserCsp.id}}">
-                                Add
-                            </a>&nbsp;
-                            <label th:text="${notUserCsp.name}" ></label>
-                        </div>
-                    </div>
-                    <!-- users csps -->
-                    <div class="col-md-6">
-                        <div th:each="uscsp : ${userCsps}" class="m-l m-b">
-                            <a class="btn btn-danger m-r"  th:href="@{'/user/' + ${user.id} + '/remove/csp/' + ${uscsp.id}}">
-                                Remove
-                            </a>&nbsp;
-                            <label th:text="${uscsp.name}"></label>
-                        </div>
-                    </div>
-                </div>
-                
-                
+                <h1 class="text-center">
+                    Logs
+                </h1>
             </div>
             <div class="ibox-content">
                 <div class="table-responsive">

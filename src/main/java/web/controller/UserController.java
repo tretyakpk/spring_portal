@@ -3,15 +3,13 @@ package web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.model.CSP;
-import web.model.Log;
-import web.model.Role;
-import web.model.User;
+import web.model.*;
 import web.repository.CSPRepository;
 import web.repository.LogRepository;
 import web.repository.RoleRepository;
@@ -22,7 +20,6 @@ import java.awt.print.Pageable;
 import java.util.*;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping(value = "/user")
 public class UserController {
 
@@ -38,6 +35,7 @@ public class UserController {
     @Autowired
     private CSPRepository CSPRepository;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("")
     public String list(Model model){
 
@@ -45,12 +43,14 @@ public class UserController {
         return "user/list";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/add")
     public String newUser(Model model){
         model.addAttribute("user", new User());
         return "user/addform";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/add")
     public String saveNew(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "user/addform";
@@ -64,12 +64,14 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/edit/{id}")
     public String editUser(Model model, @PathVariable("id") Integer id){
         model.addAttribute(userRepository.findOne(id));
         return "user/editform";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/edit/{id}")
     public String saveEdited(@Valid User userForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable("id") Integer id){
         if(bindingResult.hasErrors()) return "user/editform";
@@ -85,6 +87,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
@@ -102,6 +105,7 @@ public class UserController {
         return "user/view";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         try {
@@ -121,6 +125,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{userId}/add/csp/{cspId}")
     public String addCspToUser(@PathVariable("userId") Integer userId, @PathVariable("cspId") Integer cspId, RedirectAttributes redirectAttributes) {
         User user    = userRepository.findOne(userId);
@@ -135,6 +140,7 @@ public class UserController {
         return "redirect:/user/view/" + userId;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{userId}/remove/csp/{cspId}")
     public String removeCspFromUser(@PathVariable("userId") Integer userId, @PathVariable("cspId") Integer cspId, RedirectAttributes redirectAttributes) {
         User user    = userRepository.findOne(userId);
@@ -147,5 +153,22 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("message", "Content service provider: " + oldCsp.getName() + " removed from the user: " + user.getName());
         return "redirect:/user/view/" + userId;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping(value = "/logs")
+    public String logs(Model model) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findOne(userDetails.getId());
+
+        List<Log> logs = logRepository.findTop50ByUserOrderByIdDesc(user);
+        List<CSP> csps = user.getCsps();
+
+        model.addAttribute("logs", logs);
+        model.addAttribute("csps", csps);
+        model.addAttribute("user", user);
+
+        return "user/viewlogs";
     }
 }
