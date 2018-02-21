@@ -168,6 +168,23 @@ public class CSPController {
         return "redirect:/csp/view/" + cspId;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping(value = "/user/logs")
+    public String logs(Model model) {
+
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findOne(userDetails.getId());
+
+        List<Log> logs = logRepository.findTop50ByUserOrderByIdDesc(user);
+        List<CSP> csps = user.getCsps();
+
+        model.addAttribute("logs", logs);
+        model.addAttribute("csps", csps);
+        model.addAttribute("user", user);
+
+        return "user/viewlogs";
+    }
+
     @RequestMapping(value = "/click/save", method = RequestMethod.POST)
     @ResponseBody
     public String logClickToLinkPost(@RequestBody String body){

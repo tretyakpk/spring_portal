@@ -7,6 +7,6 @@ import web.model.Link;
 import java.util.Set;
 
 public interface LinkRepository extends JpaRepository<Link, Integer> {
-    public Link getByUrl(String url);
+    Link getByUrl(String url);
     Set<Link> findAllByCspOrderByIdDesc(CSP csp);
 }
