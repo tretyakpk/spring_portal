@@ -17,6 +17,9 @@ public class Link {
     @Column(name = "url", length = 1023)
     private String url;
 
+    @Column(name = "service")
+    private String service;
+
     @Column(name = "active")
     private int active = 1;
 
@@ -93,5 +96,13 @@ public class Link {
 
     public void setCsp(CSP csp) {
         this.csp = csp;
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public void setService(String service) {
+        this.service = service;
     }
 }

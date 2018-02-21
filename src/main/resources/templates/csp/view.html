@@ -85,7 +85,7 @@
                     <div class="ibox-content"  style="position: relative;">
                         <div class="col-lg-12">
                             <div class="row">
-                                <form action="#" class="form-horizontal">
+                                <form action="#" class="form-group form-horizontal">
                                     <div id="addlinks" class="col-md-1 btn btn-primary m-b-0 mx-auto">
                                         Add
                                     </div>
@@ -94,9 +94,18 @@
                                             <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
                                         </div>
                                     </div>
-                                    <div class="col-md-9">
+                                    <div class="col-md-4">
+                                        <div id="services">
+                                            <div class="form-group">
+                                                <input type="text" placeholder="service" class="service1 my-service form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
                                         <div id="links">
-                                            <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
+                                            <div class="form-group">
+                                                <input type="text" placeholder="link" class="link1 my-link form-control" name="1">
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -125,7 +134,8 @@
                                 <thead>
 
                                 <tr>
-                                    <th style="font-size: 20px;" >Id</th>
+                                    <th>Id</th>
+                                    <th>Service</th>
                                     <th>Url</th>
                                     <th>Created at</th>
                                     <th>Active</th>
@@ -136,7 +146,8 @@
                                 <tr th:each="ln : ${links}">
                                     <td th:text="${ln.id}"></td>
                                     <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
-                                    <td th:text="${ln.createdAt}" sec:authorize="hasRole('ADMIN')"></td>
+                                    <td th:text="${ln.service}"></td>
+                                    <td th:text="${ln.createdAt}"></td>
                                     <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'"></th>
                                     <td>
                                         <div class="text-center">
@@ -159,11 +170,13 @@
                             <table id="linksDatatable" sec:authorize="hasRole('USER')" class="table table-striped table-bordered table-hover custom">
                                 <thead>
                                 <tr>
+                                    <th>Service</th>
                                     <th>Url</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="ln : ${links}">
+                                    <td th:text="${ln.service}"></td>
                                     <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
                                 </tr>
                                 </tbody>
@@ -195,19 +208,6 @@
                     buttonup_class: 'btn btn-white'
                 });
 
-                $("input#addlinkfield").change(function () {
-                    var inputValue = $("input#addlinkfield").val();
-                    inputValue++;
-                    var ln = $("input#link" + inputValue);
-                    if(ln.length){
-                        ln.remove();
-                    } else {
-                        inputValue--;
-                        var linkHtml = '<div  class="form-group"><input id="link' + inputValue + '" type="text" placeholder="link' + inputValue + '" class="link-input form-control"></div>';
-                        $("#links").append(linkHtml);
-                    }
-                });
-
                 $(".mylink").click( function () {
 
                     var link = JSON.stringify($(this).html());
@@ -227,13 +227,34 @@
                     }
                 });
 
+                $("input#addlinkfield").change(function () {
+                    var inputValue = $("input#addlinkfield").val();
+                    inputValue++;
+
+                    var ln = $("input.my-service.service" + inputValue);
+                    var sr = $("input.my-link.link" + inputValue );
+                    if(ln.length){
+                        ln.parent('div').remove();
+                        sr.parent('div').remove();
+                    } else {
+                        inputValue--;
+                        var serviceHtml = '<div  class="form-group"><input type="text" placeholder="service" class="service' + inputValue + ' my-service form-control"></div>';
+                        var linkHtml = '<div  class="form-group"><input type="text" placeholder="link" class="link' + inputValue + ' my-link form-control"></div>';
+                        $("#services").append(serviceHtml);
+                        $("#links").append(linkHtml);
+                    }
+
+                });
+
+
+
                 $("#addlinks").click(function (e) {
                     var lls = [];
-                    $("input.link-input").each(function () {
-                        if($(this).val())
-                            lls.push({
-                                "url":$(this).val()
-                            });
+                    $("input.my-link").each(function () {
+                        var serviceVal = $("input.service" + $(this).attr('name')).val();
+                        if ($(this).val()) {
+                            lls.push({"url":$(this).val(), "service":serviceVal});
+                        }
                     });
 
                     var toSend = JSON.stringify(lls);
