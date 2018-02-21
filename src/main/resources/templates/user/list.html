@@ -42,9 +42,11 @@
                                 <td th:text="${us.active} ? 'true' : 'false'"></td>
                                 <td th:text="${us.createdAt}"></td>
                                 <td>
+                                    <div class="text-center">
                                     <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
                                     <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
                                     <a th:href="@{'/user/delete/' + ${us.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

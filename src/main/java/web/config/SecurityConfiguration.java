@@ -19,7 +19,6 @@ import web.service.CustomUserDetailsService;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
@@ -34,8 +33,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
+        http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/assets/**", "/link/**", "/click/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

@@ -23,23 +23,12 @@
             <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
                 <i class="fa fa-reorder"></i>
             </button>
-            <a href="#" class="navbar-brand">Portal</a>
+            <a th:href="@{/}" class="navbar-brand">HOME</a>
         </div>
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li>
+                <li sec:authorize="hasRole('ADMIN')">
                     <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
-                </li>
-                <li>
-                    <a aria-expanded="false" role="button" th:href="@{/csp}">CSPS</a>
-                </li>
-                <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">CSPS<span class="caret"></span></a>
-                    <ul role="menu" class="dropdown-menu">
-                        <li th:each="csp : ${csps}">
-                            <a th:text="csp.name" th:href="@{'/csp/view/' + ${csp.id}}"></a>
-                        </li>
-                    </ul>
                 </li>
             </ul>
             <ul class="nav navbar-top-links navbar-right">
@@ -47,11 +36,10 @@
                     [[${#httpServletRequest.remoteUser}]]
                 </li>
                 <li>
-                    <form th:action="@{/logout}" method="post">
+                    <a href="/logout">
                         <i class="fa fa-sign-out">
-                            <input type="submit" >
                         </i>
-                    </form>
+                    </a>
                 </li>
             </ul>
         </div>

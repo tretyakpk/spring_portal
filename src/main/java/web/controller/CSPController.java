@@ -1,6 +1,9 @@
 package web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -8,20 +11,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.model.CSP;
-import web.model.CustomUserDetails;
-import web.model.Link;
-import web.model.User;
+import web.enreachment.CryptoData;
+import web.model.*;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
+import web.repository.LogRepository;
 import web.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.Set;
+import java.util.*;
 
-// TODO ADD SECURITY!!!
 @Controller
 @RequestMapping(value = "")
 public class CSPController {
@@ -35,12 +35,24 @@ public class CSPController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LogRepository logRepository;
+
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private HttpServletRequest request;
+
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("")
     public String list(Model model, HttpServletRequest request) {
 
-
-        System.out.println(request.isUserInRole("ADMIN"));
+        if(!env.getProperty("environment").equals("local")) {
+            if (!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
+                return "redirect:" + env.getProperty("wind.enreachment");
+            log();
+        }
 
         User user = getCurrentUser();
         Set<CSP> csps = user.getCsps();
@@ -49,14 +61,23 @@ public class CSPController {
         return "csp/list";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("/csp/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
+        if(!env.getProperty("environment").equals("local")) {
+            if (!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
+                return "redirect:" + env.getProperty("wind.enreachment");
+            log();
+        }
+
         CSP csp = CSPRepository.findOne(id);
         if(csp == null)
-            return "redirect:/csp/list";
+            return "redirect:/";
 
+        List<CSP> csps = CSPRepository.findAll();
+
+        model.addAttribute("csps", csps);
         model.addAttribute("csp", csp);
         model.addAttribute("links", linkRepository.findAllByCspOrderByIdDesc(csp));
 
@@ -77,6 +98,13 @@ public class CSPController {
         else {
             csp.setCreatedAt(new Date());
             CSPRepository.save(csp);
+
+            User user = getCurrentUser();
+            Set<CSP> userCsps = user.getCsps();
+            userCsps.add(csp);
+            user.setCsps(userCsps);
+            userRepository.save(user);
+
             redirectAttributes.addFlashAttribute("message", "Content service provider " + csp.getName() + " added successfully!");
             return "redirect:/csp/view/" + csp.getId();
         }
@@ -140,8 +168,67 @@ public class CSPController {
         return "redirect:/csp/view/" + cspId;
     }
 
+    @RequestMapping(value = "/click/save", method = RequestMethod.POST)
+    @ResponseBody
+    public String logClickToLinkPost(@RequestBody String body){
+
+        HashMap<String, Object> forLog     = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            forLog.put("click", body);
+            String json = objectMapper.writeValueAsString(forLog);
+
+            Log log = new Log();
+            log.setCreated_at(new Date());
+            log.setParameters(json);
+            log.setType("click");
+            log.setUser(getCurrentUser());
+            logRepository.save(log);
+        }
+        catch (JsonProcessingException e) { System.out.println(e.getMessage());}
+
+        return "OK";
+    }
+
+    private void log(){
+
+        HashMap<String, Object> forLog     = new HashMap<>();
+        HashMap<String, String> mapHeaders = new HashMap<>();
+        HashMap<String, String> mapGet     = new HashMap<>();
+
+        Enumeration<String> headers = request.getHeaderNames();
+        while (headers.hasMoreElements()) {
+            String name = headers.nextElement();
+            mapHeaders.put( name, request.getHeader(name));
+        }
+
+        Enumeration<String> get = request.getParameterNames();
+        while (get.hasMoreElements()) {
+            String name = get.nextElement();
+            mapGet.put( name, request.getParameter(name));
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            forLog.put("url", request.getRequestURL());
+            forLog.put("headers", mapHeaders);
+            forLog.put("get",     mapGet);
+
+            String json = objectMapper.writeValueAsString(forLog);
+
+            Log log = new Log();
+            log.setCreated_at(new Date());
+            log.setParameters(json);
+            log.setMsisdn(CryptoData.getMsisdn(request, env));
+            log.setUser(getCurrentUser());
+            logRepository.save(log);
+        }
+        catch (JsonProcessingException e) { System.out.println(e.getMessage());}
+    }
+
     private User getCurrentUser(){
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findOne(userDetails.getId());
     }
+
 }

@@ -1,30 +1,25 @@
 package web.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.enreachment.CryptoData;
 import web.model.CSP;
-import web.model.CustomUserDetails;
-import web.model.Log;
+import web.model.Role;
 import web.model.User;
 import web.repository.CSPRepository;
 import web.repository.LogRepository;
 import web.repository.RoleRepository;
 import web.repository.UserRepository;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.*;
 
 @Controller
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping(value = "/user")
 public class UserController {
 
@@ -40,18 +35,8 @@ public class UserController {
     @Autowired
     private CSPRepository CSPRepository;
 
-    @Autowired
-    private Environment env;
-
-    @Autowired
-    private HttpServletRequest request;
-
     @GetMapping("")
     public String list(Model model){
-
-//        if(!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
-//            return "redirect:" + env.getProperty("wind.enreachment");
-//        log();
 
         model.addAttribute("users", userRepository.findAll());
         return "user/list";
@@ -117,7 +102,14 @@ public class UserController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         try {
-            userRepository.delete(id);
+            User user = userRepository.findOne(id);
+            Set<Role> nullRoles = new HashSet<>();
+            Set<CSP> nullCsps = new HashSet<>();
+            user.setRoles(nullRoles);
+            user.setCsps(nullCsps);
+            userRepository.save(user);
+            userRepository.delete(user);
+
             redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
             return "redirect:/user";
         } catch (Exception e){
@@ -152,47 +144,5 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("message", "Content service provider: " + oldCsp.getName() + " removed from the user: " + user.getName());
         return "redirect:/user/view/" + userId;
-    }
-
-    private User getCurrentUser(){
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findOne(userDetails.getId());
-    }
-
-    private void log(){
-
-        HashMap<String, Object> forLog     = new HashMap<>();
-        HashMap<String, String> mapHeaders = new HashMap<>();
-        HashMap<String, String> mapGet     = new HashMap<>();
-
-        Enumeration<String> headers = request.getHeaderNames();
-        while (headers.hasMoreElements()) {
-            String name = headers.nextElement();
-            mapHeaders.put( name, request.getHeader(name));
-        }
-
-        Enumeration<String> get = request.getParameterNames();
-        while (get.hasMoreElements()) {
-            String name = get.nextElement();
-            mapGet.put( name, request.getParameter(name));
-        }
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            forLog.put("url", request.getRequestURL());
-            forLog.put("headers", mapHeaders);
-            forLog.put("get",     mapGet);
-
-            String json = objectMapper.writeValueAsString(forLog);
-
-            Log log = new Log();
-            log.setCreated_at(new Date());
-            log.setParameters(json);
-            log.setMsisdn(CryptoData.getMsisdn(request, env));
-            log.setUser(getCurrentUser());
-            System.out.println(log.getId());
-            logRepository.save(log);
-        }
-        catch (JsonProcessingException e) { System.out.println(e.getMessage());}
     }
 }
