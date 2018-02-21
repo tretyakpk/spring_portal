@@ -1,22 +1,27 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.model.CSP;
+import web.model.CustomUserDetails;
 import web.model.Link;
+import web.model.User;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
+import web.repository.UserRepository;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.Set;
 
 // TODO ADD SECURITY!!!
 @Controller
-@RequestMapping(value = "/csp")
+@RequestMapping(value = "")
 public class CSPController {
 
     @Autowired
@@ -25,13 +30,20 @@ public class CSPController {
     @Autowired
     private LinkRepository linkRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("")
     public String list(Model model) {
-        model.addAttribute("csps", CSPRepository.findAll());
+
+        User user = getCurrentUser();
+        Set<CSP> csps = user.getCsps();
+
+        model.addAttribute("csps", csps);
         return "csp/list";
     }
 
-    @GetMapping("/view/{id}")
+    @GetMapping("/csp/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
         CSP csp = CSPRepository.findOne(id);
@@ -45,13 +57,13 @@ public class CSPController {
     }
 
 
-    @GetMapping(value = "/add")
+    @GetMapping(value = "/csp/add")
     public String newUser(Model model) {
         model.addAttribute("csp", new CSP());
         return "csp/addform";
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping(value = "/csp/add")
     public String saveNew(@Valid CSP csp, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "csp/addform";
         else {
@@ -62,25 +74,25 @@ public class CSPController {
         }
     }
 
-    @GetMapping(value = "/edit/{id}")
+    @GetMapping(value = "/csp/edit/{id}")
     public String editUser(Model model, @PathVariable("id") Integer id){
         model.addAttribute("csp", CSPRepository.findOne(id));
         return "csp/editform";
     }
 
-    @PostMapping(value = "/edit")
-    public String saveEdited(@Valid CSP csp, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    @PostMapping(value = "/csp/edit/{id}")
+    public String saveEdited(@Valid CSP cspForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable("id") Integer id){
         if(bindingResult.hasErrors()) return "csp/editform";
         else {
-            CSP csp1 = CSPRepository.findOne(csp.getId());
-            csp1.setName(csp.getName());
-            CSPRepository.save(csp1);
+            CSP csp = CSPRepository.findOne(id);
+            csp.setName(cspForm.getName());
+            CSPRepository.save(csp);
             redirectAttributes.addFlashAttribute("message", "Content Service Provider " + csp.getName() + " edited successfully!");
             return "redirect:/csp/view/" + csp.getId();
         }
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/csp/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         try {
             CSPRepository.delete(id);
@@ -92,7 +104,7 @@ public class CSPController {
         }
     }
 
-    @GetMapping("/{cspId}/link/delete/{linkId}")
+    @GetMapping("/csp/{cspId}/link/delete/{linkId}")
     public String deleteLink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
 
         linkRepository.delete(linkId);
@@ -101,7 +113,7 @@ public class CSPController {
 
     }
     
-    @GetMapping("/{cspId}/link/change/{linkId}")
+    @GetMapping("/csp/{cspId}/link/change/{linkId}")
     public String changelink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
         
         Link link = linkRepository.findOne(linkId);
@@ -113,5 +125,10 @@ public class CSPController {
         linkRepository.save(link);
         redirectAttributes.addFlashAttribute("message", "Status changed successfully!");
         return "redirect:/csp/view/" + cspId;
+    }
+
+    private User getCurrentUser(){
+        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findOne(userDetails.getId());
     }
 }

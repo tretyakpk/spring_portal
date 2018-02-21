@@ -54,6 +54,20 @@ public class User {
         this.logs = users.getLogs();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", createdAt=" + createdAt +
+                ", active=" + active +
+                ", logs=" + logs +
+                ", roles=" + roles +
+                ", csps=" + csps +
+                '}';
+    }
+
     public int getId() {
         return id;
     }

@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:fragment="head">
     <title>SpringPortal</title>
     <meta charset="utf-8" />
@@ -33,12 +34,11 @@
                     <a aria-expanded="false" role="button" th:href="@{/csp}">CSPS</a>
                 </li>
                 <li class="dropdown">
-                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown"> Menu item <span class="caret"></span></a>
+                    <a aria-expanded="false" role="button" href="#" class="dropdown-toggle" data-toggle="dropdown">CSPS<span class="caret"></span></a>
                     <ul role="menu" class="dropdown-menu">
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
-                        <li><a href="">Menu item</a></li>
+                        <li th:each="csp : ${csps}">
+                            <a th:text="csp.name" th:href="@{'/csp/view/' + ${csp.id}}"></a>
+                        </li>
                     </ul>
                 </li>
             </ul>

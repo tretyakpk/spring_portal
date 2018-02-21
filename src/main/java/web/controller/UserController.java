@@ -11,9 +11,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.enreachment.CryptoData;
+import web.model.CSP;
 import web.model.CustomUserDetails;
 import web.model.Log;
 import web.model.User;
+import web.repository.CSPRepository;
 import web.repository.LogRepository;
 import web.repository.RoleRepository;
 import web.repository.UserRepository;
@@ -34,6 +36,9 @@ public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private CSPRepository CSPRepository;
 
     @Autowired
     private Environment env;
@@ -64,6 +69,7 @@ public class UserController {
         else {
             user.setCreatedAt(new Date());
             user.setRoles(roleRepository.findByRole("USER"));
+            user.setActive(1);
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("message", "User " + user.getName() + " added successfully!");
             return "redirect:/user/view/" + user.getId();
@@ -76,17 +82,17 @@ public class UserController {
         return "user/editform";
     }
 
-    @PostMapping(value = "/edit")
-    public String saveEdited(@Valid User user, BindingResult bindingResult, RedirectAttributes redirectAttributes){
+    @PostMapping(value = "/edit/{id}")
+    public String saveEdited(@Valid User userForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable("id") Integer id){
         if(bindingResult.hasErrors()) return "user/editform";
         else {
-            User user1 = userRepository.findOne(user.getId());
 
-            user1.setName(user.getName());
-            user1.setPassword(user.getPassword());
+            User user = userRepository.findOne(id);
+            user.setName(userForm.getName());
+            user.setPassword(userForm.getPassword());
 
-            userRepository.save(user1);
-            redirectAttributes.addFlashAttribute("message", "User " + user1.getName() + " edited successfully!");
+            userRepository.save(user);
+            redirectAttributes.addFlashAttribute("message", "User " + user.getName() + " edited successfully!");
             return "redirect:/user/view/" + user.getId();
         }
     }
@@ -94,7 +100,14 @@ public class UserController {
     @GetMapping("/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
-        User user = userRepository.findOne(id);
+        User user                 = userRepository.findOne(id);
+        List<CSP> notUserCsps     = CSPRepository.findAll();
+
+        Set<CSP> userCsps = user.getCsps();
+        notUserCsps.removeAll(userCsps);
+
+        model.addAttribute("userCsps", userCsps);
+        model.addAttribute("notUserCsps", notUserCsps);
         model.addAttribute("user", user);
         model.addAttribute("logs", logRepository.findAllByUserOrderByIdDesc(user));
 
@@ -113,7 +126,35 @@ public class UserController {
         }
     }
 
-    private User getUser(){
+    @GetMapping("/{userId}/add/csp/{cspId}")
+    public String addCspToUser(@PathVariable("userId") Integer userId, @PathVariable("cspId") Integer cspId, RedirectAttributes redirectAttributes) {
+        User user    = userRepository.findOne(userId);
+        CSP newCsp   = CSPRepository.findOne(cspId);
+
+        Set<CSP> csps = user.getCsps();
+        csps.add(newCsp);
+        user.setCsps(csps);
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("message", "Added content service provider: " + newCsp.getName() + " to the user: " + user.getName());
+        return "redirect:/user/view/" + userId;
+    }
+
+    @GetMapping("/{userId}/remove/csp/{cspId}")
+    public String removeCspFromUser(@PathVariable("userId") Integer userId, @PathVariable("cspId") Integer cspId, RedirectAttributes redirectAttributes) {
+        User user    = userRepository.findOne(userId);
+        CSP oldCsp   = CSPRepository.findOne(cspId);
+
+        Set<CSP> csps = user.getCsps();
+        csps.remove(oldCsp);
+        user.setCsps(csps);
+        userRepository.save(user);
+
+        redirectAttributes.addFlashAttribute("message", "Content service provider: " + oldCsp.getName() + " removed from the user: " + user.getName());
+        return "redirect:/user/view/" + userId;
+    }
+
+    private User getCurrentUser(){
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findOne(userDetails.getId());
     }
@@ -148,7 +189,7 @@ public class UserController {
             log.setCreated_at(new Date());
             log.setParameters(json);
             log.setMsisdn(CryptoData.getMsisdn(request, env));
-            log.setUser(getUser());
+            log.setUser(getCurrentUser());
             System.out.println(log.getId());
             logRepository.save(log);
         }

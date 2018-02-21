@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="~{fragments/header :: head}"></head>
 <body class="top-navigation">
 <div id="wrapper">
@@ -49,6 +50,31 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+            <div class="ibox-content">
+                
+                <div class="row">
+                    <!-- form with all csps -->
+                    <div class="col-md-6">
+                        <div th:each="notUserCsp : ${notUserCsps}" class="m-l m-b">
+                            <a class="btn btn-success m-r"  th:href="@{'/user/' + ${user.id} + '/add/csp/' + ${notUserCsp.id}}">
+                                Add
+                            </a>&nbsp;
+                            <label th:text="${notUserCsp.name}" ></label>
+                        </div>
+                    </div>
+                    <!-- users csps -->
+                    <div class="col-md-6">
+                        <div th:each="uscsp : ${userCsps}" class="m-l m-b">
+                            <a class="btn btn-danger m-r"  th:href="@{'/user/' + ${user.id} + '/remove/csp/' + ${uscsp.id}}">
+                                Remove
+                            </a>&nbsp;
+                            <label th:text="${uscsp.name}"></label>
+                        </div>
+                    </div>
+                </div>
+                
+                
             </div>
             <div class="ibox-content">
                 <div class="table-responsive">

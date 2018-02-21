@@ -36,6 +36,18 @@ public class CSP {
     public CSP() {
     }
 
+    @Override
+    public String toString() {
+        return "CSP{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                ", links=" + links +
+                ", parameters=" + parameters +
+                '}';
+    }
+
     public CSP(String name, String description) {
         this.name = name;
         this.description = description;
