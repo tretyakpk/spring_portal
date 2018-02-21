@@ -44,7 +44,7 @@
                     <a th:href="@{/csp/add}" class="btn btn-block btn-lg btn-success">NEW CSP</a>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" >
                 <div class="col-lg-12">
                     <div class="ibox-title">
                         <h1 class="text-center" th:text="${csp.name}"></h1>
@@ -55,7 +55,7 @@
                             <div th:text="${error}" class="alert alert-danger">Error message</div>
                         </div>
                     </div>
-                    <div class="ibox-content" sec:authorize="hasRole('ADMIN')">
+                    <div class="ibox-content" sec:authorize="hasRole('ADMIN')" >
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover dataTable-actions">
                                 <tbody>
@@ -77,24 +77,24 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" sec:authorize="hasRole('ADMIN')">
                 <div class="col-lg-12">
-                    <div class="ibox-content" sec:authorize="hasRole('ADMIN')">
+                    <div class="ibox-title">
+                        <h2>Add link</h2>
+                    </div>
+                    <div class="ibox-content"  style="position: relative;">
                         <div class="col-lg-12">
                             <div class="row">
                                 <form action="#" class="form-horizontal">
                                     <div id="addlinks" class="col-md-1 btn btn-primary m-b-0 mx-auto">
-                                        Send
+                                        Add
                                     </div>
                                     <div class="col-md-2">
                                         <div class="input-group bootstrap-touchspin">
                                             <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <h4>Add link</h4>
-                                    </div>
-                                    <div class="col-md-7">
+                                    <div class="col-md-9">
                                         <div id="links">
                                             <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
                                         </div>
@@ -107,25 +107,38 @@
             </div>
             <div class="row">
                 <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h2 class="text-center" th:text="Links"></h2>
+                    </div>
                     <div class="ibox-content">
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTable-actions">
+                            <!-- table for admin -->
+                            <style>
+                                .custom{
+                                    font-size: 10px;
+                                },
+                                .bottomcustom, .topcustom {
+                                    font-size: 10px;
+                                }
+                            </style>
+                            <table id="linksDatatable" sec:authorize="hasRole('ADMIN')" class="table table-striped table-bordered table-hover custom">
                                 <thead>
+
                                 <tr>
-                                    <th>Id</th>
+                                    <th style="font-size: 20px;" >Id</th>
                                     <th>Url</th>
                                     <th>Created at</th>
-                                    <th sec:authorize="hasRole('ADMIN')">Active</th>
-                                    <th sec:authorize="hasRole('ADMIN')"></th>
+                                    <th>Active</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="ln : ${links}">
                                     <td th:text="${ln.id}"></td>
                                     <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
-                                    <td th:text="${ln.createdAt}"></td>
-                                    <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'" sec:authorize="hasRole('ADMIN')"></th>
-                                    <td sec:authorize="hasRole('ADMIN')">
+                                    <td th:text="${ln.createdAt}" sec:authorize="hasRole('ADMIN')"></td>
+                                    <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'"></th>
+                                    <td>
                                         <div class="text-center">
                                             <a th:href="@{'/csp/' + ${csp.id} + '/link/change/' + ${ln.id}}" title="Change status" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
                                             <a th:href="@{'/csp/' + ${csp.id} + '/link/delete/' + ${ln.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
@@ -134,6 +147,28 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <!-- table for user -->
+                            <style>
+                                .custom{
+                                    font-size: 20px;
+                                },
+                                .bottomcustom, .topcustom {
+                                    font-size: 15px;
+                                }
+                            </style>
+                            <table id="linksDatatable" sec:authorize="hasRole('USER')" class="table table-striped table-bordered table-hover custom">
+                                <thead>
+                                <tr>
+                                    <th>Url</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="ln : ${links}">
+                                    <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+
                         </div>
                     </div>
                 </div>
@@ -146,6 +181,12 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             $(document).ready(function(){
+                $('#linksDatatable').DataTable({
+                    pageLength: 50,
+                    responsive: true,
+                    "dom": '<"topcustom"lfr>t<"bottomcustom"ip>'
+                });
+
                 $(".touchspin3").TouchSpin({
                     min: 1,
                     max: 20,
