@@ -5,16 +5,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.model.CSP;
+import web.model.Link;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
 
-import javax.jws.WebParam;
 import javax.validation.Valid;
 import java.util.Date;
 
+// TODO ADD SECURITY!!!
 @Controller
 @RequestMapping(value = "/csp")
 public class CSPController {
@@ -90,5 +90,28 @@ public class CSPController {
             redirectAttributes.addFlashAttribute("error", "Something went wrong!");
             return "redirect:/csp";
         }
+    }
+
+    @GetMapping("/{cspId}/link/delete/{linkId}")
+    public String deleteLink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
+
+        linkRepository.delete(linkId);
+        redirectAttributes.addFlashAttribute("message", "Link deleted successfully!");
+        return "redirect:/csp/view/" + cspId;
+
+    }
+    
+    @GetMapping("/{cspId}/link/change/{linkId}")
+    public String changelink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
+        
+        Link link = linkRepository.findOne(linkId);
+        if(link.getActive() == 1)
+            link.setActive(0);
+        else
+            link.setActive(1);
+
+        linkRepository.save(link);
+        redirectAttributes.addFlashAttribute("message", "Status changed successfully!");
+        return "redirect:/csp/view/" + cspId;
     }
 }

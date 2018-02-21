@@ -55,7 +55,7 @@
                                     <input class="touchspin3" id="addlinkfield" type="text" value="1"  name="demo3" style="display: block;">
                                 </div>
                             </div>
-                            <div class="col-sm-9">
+                            <div class="col-md-9">
                                 <div id="links">
                                     <div class="form-group"><input id="link1" type="text" placeholder="link1" class="link-input form-control"></div>
                                 </div>
@@ -71,23 +71,20 @@
                         <tr>
                             <th>Id</th>
                             <th>Url</th>
-                            <th>Active</th>
                             <th>Created at</th>
+                            <th>Active</th>
                             <th sec:authorize="hasRole('ADMIN')">Actions</th>
-                            <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr th:each="ln : ${links}">
                             <td th:text="${ln.id}"></td>
-                            <td><a th:utext="${ln.url}"></a></td>
-                            <td th:text="${ln.active} ? 'true' : false"></td>
+                            <td><a th:href="@{${ln.url}}" th:text="${ln.url}"></a></td>
                             <td th:text="${ln.createdAt}"></td>
+                            <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'"></th>
                             <td sec:authorize="hasRole('ADMIN')">
-                                <a th:href="@{'/link/delete/' + ${csp.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
-                            </td>
-                            <td>
-                                <a th:href="@{'/csp/delete/' + ${csp.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                                <a th:href="@{'/csp/' + ${csp.id} + '/link/change/' + ${ln.id}}" title="Change status" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
+                                <a th:href="@{'/csp/' + ${csp.id} + '/link/delete/' + ${ln.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
                             </td>
                         </tr>
                         </tbody>

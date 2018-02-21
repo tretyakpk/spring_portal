@@ -23,16 +23,16 @@
                 </div>
             </div>
             <div class="ibox-content">
-                <form th:action="@{/csp/edit}" th:object="${csp}" class="form-horizontal" method="post">
-                    <div class="form-group" th:classappend="${#fields.hasErrors('name')} ? 'has-error'"><label class="col-lg-2 control-label">Name</label>
-                        <input th:type="hidden" th:field="*{id}">
-                        <div class="col-lg-10"><input type="text" placeholder="name" th:field="*{name}" class="form-control">
+                <form th:action="@{/csp/add}" th:object="${csp}"method="post">
+                    <div class="form-group row" th:classappend="${#fields.hasErrors('name')} ? 'has-error'">
+                        <label class="col-sm-2 control-label">Name</label>
+                        <div class="col-sm-10"><input type="text" placeholder="name" th:field="*{name}" class="form-control">
                             <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:class="help-block"></span>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-lg-offset-2 col-lg-10">
-                            <button class="btn btn-sm btn-primary m-t-n-xs" type="submit">Edit</button>
+                    <div class="form-group row">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button class="btn btn-sm btn-primary m-t-n-xs" type="submit">Create</button>
                         </div>
                     </div>
                 </form>
