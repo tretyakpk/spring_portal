@@ -1,6 +1,7 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import web.repository.CSPRepository;
 import web.repository.LinkRepository;
 import web.repository.UserRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Date;
 import java.util.Set;
@@ -33,8 +35,12 @@ public class CSPController {
     @Autowired
     private UserRepository userRepository;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("")
-    public String list(Model model) {
+    public String list(Model model, HttpServletRequest request) {
+
+
+        System.out.println(request.isUserInRole("ADMIN"));
 
         User user = getCurrentUser();
         Set<CSP> csps = user.getCsps();
@@ -43,6 +49,7 @@ public class CSPController {
         return "csp/list";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/csp/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
@@ -56,13 +63,14 @@ public class CSPController {
         return "csp/view";
     }
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/csp/add")
     public String newUser(Model model) {
         model.addAttribute("csp", new CSP());
         return "csp/addform";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/csp/add")
     public String saveNew(@Valid CSP csp, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "csp/addform";
@@ -74,12 +82,14 @@ public class CSPController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/csp/edit/{id}")
     public String editUser(Model model, @PathVariable("id") Integer id){
         model.addAttribute("csp", CSPRepository.findOne(id));
         return "csp/editform";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping(value = "/csp/edit/{id}")
     public String saveEdited(@Valid CSP cspForm, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable("id") Integer id){
         if(bindingResult.hasErrors()) return "csp/editform";
@@ -92,6 +102,7 @@ public class CSPController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/csp/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         try {
@@ -104,6 +115,7 @@ public class CSPController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/csp/{cspId}/link/delete/{linkId}")
     public String deleteLink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
 
@@ -112,7 +124,8 @@ public class CSPController {
         return "redirect:/csp/view/" + cspId;
 
     }
-    
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/csp/{cspId}/link/change/{linkId}")
     public String changelink(@PathVariable("cspId") Integer cspId, @PathVariable("linkId") Integer linkId, RedirectAttributes redirectAttributes){
         

@@ -1,10 +1,9 @@
 package web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import web.model.CSP;
 import web.model.Link;
@@ -12,12 +11,7 @@ import web.model.User;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
 import web.repository.UserRepository;
-import web.wrappers.LinkWrapper;
-
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/link")
@@ -32,16 +26,7 @@ public class LinkRestController {
     @Autowired
     private UserRepository userRepository;
 
-//   call example
-//    [
-//    {
-//        "url" : "testUrl"
-//    },
-//    {
-//        "url" : "testurl2"
-//    }
-//    ]
-
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/add/{csp_id}", method = RequestMethod.POST)
     public ResponseEntity<HashSet<Link>> addLinks(@RequestBody HashSet<Link> links, @PathVariable("csp_id") Integer csp_id){
 
