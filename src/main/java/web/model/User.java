@@ -3,6 +3,7 @@ package web.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -37,7 +38,7 @@ public class User {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_csp", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "csp_id"))
-    private Set<CSP> csps;
+    private List<CSP> csps;
 
     public User() {
 
@@ -108,11 +109,11 @@ public class User {
         this.roles = roles;
     }
 
-    public Set<CSP> getCsps() {
+    public List<CSP> getCsps() {
         return csps;
     }
 
-    public void setCsps(Set<CSP> csps) {
+    public void setCsps(List<CSP> csps) {
         this.csps = csps;
     }
 

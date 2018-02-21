@@ -55,7 +55,7 @@ public class CSPController {
         }
 
         User user = getCurrentUser();
-        Set<CSP> csps = user.getCsps();
+        List<CSP> csps = user.getCsps();
 
         model.addAttribute("csps", csps);
         return "csp/list";
@@ -75,9 +75,9 @@ public class CSPController {
         if(csp == null)
             return "redirect:/";
 
-        List<CSP> csps = CSPRepository.findAll();
+        User user = getCurrentUser();
 
-        model.addAttribute("csps", csps);
+        model.addAttribute("csps", user.getCsps());
         model.addAttribute("csp", csp);
         model.addAttribute("links", linkRepository.findAllByCspOrderByIdDesc(csp));
 
@@ -100,7 +100,7 @@ public class CSPController {
             CSPRepository.save(csp);
 
             User user = getCurrentUser();
-            Set<CSP> userCsps = user.getCsps();
+            List<CSP> userCsps = user.getCsps();
             userCsps.add(csp);
             user.setCsps(userCsps);
             userRepository.save(user);

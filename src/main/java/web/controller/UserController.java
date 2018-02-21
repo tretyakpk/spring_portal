@@ -1,6 +1,7 @@
 package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.model.CSP;
+import web.model.Log;
 import web.model.Role;
 import web.model.User;
 import web.repository.CSPRepository;
@@ -16,6 +18,7 @@ import web.repository.RoleRepository;
 import web.repository.UserRepository;
 
 import javax.validation.Valid;
+import java.awt.print.Pageable;
 import java.util.*;
 
 @Controller
@@ -88,14 +91,14 @@ public class UserController {
         User user                 = userRepository.findOne(id);
         List<CSP> notUserCsps     = CSPRepository.findAll();
 
-        Set<CSP> userCsps = user.getCsps();
+        List<CSP> userCsps = user.getCsps();
         notUserCsps.removeAll(userCsps);
 
         model.addAttribute("userCsps", userCsps);
         model.addAttribute("notUserCsps", notUserCsps);
         model.addAttribute("user", user);
-        model.addAttribute("logs", logRepository.findAllByUserOrderByIdDesc(user));
 
+        model.addAttribute("logs", logRepository.findTop50ByUserOrderByIdDesc(user));
         return "user/view";
     }
 
@@ -104,7 +107,7 @@ public class UserController {
         try {
             User user = userRepository.findOne(id);
             Set<Role> nullRoles = new HashSet<>();
-            Set<CSP> nullCsps = new HashSet<>();
+            List<CSP> nullCsps = new LinkedList<>();
             user.setRoles(nullRoles);
             user.setCsps(nullCsps);
             userRepository.save(user);
@@ -123,7 +126,7 @@ public class UserController {
         User user    = userRepository.findOne(userId);
         CSP newCsp   = CSPRepository.findOne(cspId);
 
-        Set<CSP> csps = user.getCsps();
+        List<CSP> csps = user.getCsps();
         csps.add(newCsp);
         user.setCsps(csps);
         userRepository.save(user);
@@ -137,7 +140,7 @@ public class UserController {
         User user    = userRepository.findOne(userId);
         CSP oldCsp   = CSPRepository.findOne(cspId);
 
-        Set<CSP> csps = user.getCsps();
+        List<CSP> csps = user.getCsps();
         csps.remove(oldCsp);
         user.setCsps(csps);
         userRepository.save(user);
