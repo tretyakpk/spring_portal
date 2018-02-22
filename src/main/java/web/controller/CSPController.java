@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import web.enreachment.CryptoData;
+import web.enrichment.CryptoData;
 import web.model.*;
 import web.repository.CSPRepository;
 import web.repository.LinkRepository;
@@ -134,12 +134,13 @@ public class CSPController {
     @GetMapping("/csp/delete/{id}")
     public String delete(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes){
         try {
+
             CSPRepository.delete(id);
             redirectAttributes.addFlashAttribute("message", "Content Service Provider deleted successfully!");
-            return "redirect:/csp";
+            return "redirect:/";
         } catch (Exception e){
             redirectAttributes.addFlashAttribute("error", "Something went wrong!");
-            return "redirect:/csp";
+            return "redirect:/";
         }
     }
 

@@ -1,4 +1,4 @@
-package web.enreachment;
+package web.enrichment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +10,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
