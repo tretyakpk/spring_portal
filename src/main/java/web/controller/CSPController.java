@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,16 +47,13 @@ public class CSPController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("")
-    public String list(Model model, HttpServletRequest request) {
-
-        if(!env.getProperty("environment").equals("local")) {
-            if (!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
-                return "redirect:" + env.getProperty("wind.enreachment");
-            log();
-        }
+    public String list(Model model) {
 
         User user = getCurrentUser();
         List<CSP> csps = user.getCsps();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println( authentication.getDetails());
 
         model.addAttribute("csps", csps);
         return "csp/list";
@@ -65,17 +63,11 @@ public class CSPController {
     @GetMapping("/csp/view/{id}")
     public String view(@PathVariable("id") Integer id, Model model){
 
-        if(!env.getProperty("environment").equals("local")) {
-            if (!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
-                return "redirect:" + env.getProperty("wind.enreachment");
-            log();
-        }
+        User user = getCurrentUser();
 
         CSP csp = CSPRepository.findOne(id);
         if(csp == null)
             return "redirect:/";
-
-        User user = getCurrentUser();
 
         model.addAttribute("csps", user.getCsps());
         model.addAttribute("csp", csp);
@@ -173,9 +165,7 @@ public class CSPController {
     @GetMapping(value = "/user/logs")
     public String logs(Model model) {
 
-        CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findOne(userDetails.getId());
-
+        User user = getCurrentUser();
         List<Log> logs = logRepository.findTop50ByUserOrderByIdDesc(user);
         List<CSP> csps = user.getCsps();
 
@@ -208,6 +198,20 @@ public class CSPController {
         return "OK";
     }
 
+    @GetMapping(value = "/enduser")
+    public String endUserWind(){
+
+        User user = getCurrentUser();
+
+        if(!env.getProperty("environment").equals("local") && !user.getName().equals("admin")) {
+            if (!request.getParameterMap().containsKey("m") && env.getProperty("carrier").equals("wind"))
+                return "redirect:" + env.getProperty("wind.enrichment");
+            log();
+        }
+
+        return "redirect:/";
+    }
+
     private void log(){
 
         HashMap<String, Object> forLog     = new HashMap<>();
@@ -228,14 +232,13 @@ public class CSPController {
 
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            forLog.put("url", request.getRequestURL());
-            forLog.put("headers", mapHeaders);
-            forLog.put("get",     mapGet);
+            forLog.put("get", mapGet);
 
             String json = objectMapper.writeValueAsString(forLog);
 
             Log log = new Log();
             log.setCreated_at(new Date());
+            log.setType("login");
             log.setParameters(json);
             log.setMsisdn(CryptoData.getMsisdn(request, env));
             log.setUser(getCurrentUser());
