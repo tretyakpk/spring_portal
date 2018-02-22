@@ -148,8 +148,8 @@
                                 <tbody>
                                 <tr th:each="ln : ${links}">
                                     <td th:text="${ln.id}"></td>
-                                    <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
                                     <td th:text="${ln.service}"></td>
+                                    <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
                                     <td th:text="${ln.createdAt}"></td>
                                     <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'"></th>
                                     <td>
