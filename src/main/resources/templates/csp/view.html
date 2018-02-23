@@ -196,18 +196,9 @@
                     "dom": '<"topcustom"lfr>t<"bottomcustom"ip>'
                 });
 
-                $(".touchspin3").TouchSpin({
-                    min: 1,
-                    max: 20,
-                    verticalbuttons: true,
-                    buttondown_class: 'btn btn-white',
-                    buttonup_class: 'btn btn-white'
-                });
-
                 $(".mylink").click( function () {
 
                     var link = JSON.stringify($(this).html());
-                    console.log(link);
 
                     if(link) {
                         $.ajax({
@@ -217,11 +208,20 @@
                             crossDomain: true,
                             dataType: 'json',
                             contentType: "application/json; charset=utf-8",
-                            success: function (result) {},
-                            error: function (result) {}
+                            success: function () {console.log("click saved")},
+                            error: function () {console.log("error in click saving")}
                         });
                     }
                 });
+
+                $(".touchspin3").TouchSpin({
+                    min: 1,
+                    max: 20,
+                    verticalbuttons: true,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
 
                 $("input#addlinkfield").change(function () {
                     var inputValue = $("input#addlinkfield").val();

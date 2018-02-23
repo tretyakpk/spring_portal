@@ -1,37 +1,42 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
-<head th:replace="~{fragments/header :: head}"></head>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Wind</title>
+
+    <link th:href="@{/assets/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/font-awesome/css/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/style.css}" rel="stylesheet">
+</head>
 
 <body class="gray-bg">
-    <div class="large-box text-center animated fadeInDown">
-        <div>
-            <h1 class="logo-name" th:align="center" >WIND</h1>
-        </div>
-    </div>
-    <div class="middle-box text-center loginscreen animated fadeInDown">
-        <div>
-            <h3>Welcome</h3>
-            <p>Login in. To see it in action.</p>
 
-            <p th:if="${param.error}">
-                Invalid username and password.
-            </p>
-            <p th:if="${param.logout}">
-                You have been logged out.
-            </p>
-            <form th:action="@{/login}" method="post">
-                <div class="form-group">
-                    <input type="text" name="username" class="form-control" placeholder="Username" required="">
-                </div>
-                <div class="form-group">
-                    <input type="password" name="password" class="form-control" placeholder="Password" required="">
-                </div>
-                <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
-            </form>
+<div class="middle-box text-center loginscreen animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name" style="font-size: 100px;">WIND</h1>
+
         </div>
+        <h3>Welcome</h3>
+        <p>Login in. To see it in action.</p>
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="Username" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="Password" required="">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">Login</button>
+        </form>
     </div>
-    <div th:replace="~{fragments/footer :: footer}"></div>
-    <div th:replace="~{fragments/footer :: js}"></div>
+</div>
+
+<script th:src="@{/assets/js/jquery-3.1.1.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
 </body>
 </html>
