@@ -6,40 +6,7 @@
 <div id="wrapper">
     <div id="page-wrapper" class="gray-bg">
         <!-- HEADER -->
-        <div class="row border-bottom white-bg" th:fragment="navbar">
-            <nav class="navbar navbar-static-top" role="navigation">
-                <div class="navbar-header">
-                    <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
-                        <i class="fa fa-reorder"></i>
-                    </button>
-                    <a th:href="@{/}" class="navbar-brand">CSPS</a>
-                </div>
-                <div class="navbar-collapse collapse" id="navbar">
-                    <ul class="nav navbar-nav">
-                        <li sec:authorize="hasRole('ADMIN')">
-                            <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
-                        </li>
-                        <li sec:authorize="hasRole('USER')">
-                            <a aria-expanded="false" role="button" th:href="@{/user/logs}">LOGS</a>
-                        </li>
-                        <li th:each="csp : ${csps}" sec:authorize="hasRole('USER')">
-                            <a th:href="@{'/csp/view/' + ${csp.id}}" th:text="@{${#strings.toUpperCase(csp.name)}}" aria-expanded="false" role="button"></a>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-top-links navbar-right">
-                        <li  th:inline="text">
-                            [[${#httpServletRequest.remoteUser}]]
-                        </li>
-                        <li>
-                            <a href="/logout">
-                                <i class="fa fa-sign-out">
-                                </i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
+        <div class="row border-bottom white-bg" th:replace="~{csp/view :: navbar}"></div>
         <!-- BODY: -->
         <div class="wrapper wrapper-content">
             <div class="row" sec:authorize="hasRole('ADMIN')">

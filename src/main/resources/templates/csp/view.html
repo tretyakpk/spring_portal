@@ -3,6 +3,15 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="~{fragments/header :: head}"></head>
 <body class="top-navigation">
+<style>
+    .mylink{
+        color: #337ab7;
+        text-decoration: none;
+    }
+    .mylink:hover{
+        cursor: pointer;
+    }
+</style>
 <div id="wrapper">
     <div id="page-wrapper" class="gray-bg">
         <!-- HEADER -->
@@ -27,13 +36,9 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-top-links navbar-right">
-                        <li  th:inline="text">
-                            [[${#httpServletRequest.remoteUser}]]
-                        </li>
                         <li>
                             <a href="/logout">
-                                <i class="fa fa-sign-out">
-                                </i>
+                                <i class="fa fa-sign-out"></i> Log out
                             </a>
                         </li>
                     </ul>
@@ -60,7 +65,7 @@
                     </div>
                     <div class="ibox-content" sec:authorize="hasRole('ADMIN')" >
                         <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover dataTable-actions">
+                            <table class="table table-striped table-bordered table-hover">
                                 <tbody>
                                     <tr>
                                         <th>Id</th>
@@ -111,78 +116,55 @@
                             </div>
                         </div>
                     </div>
-                    <div class="ibox-title" sec:authorize="hasRole('USER')">
+                    <div class="ibox-title">
                         <h2 class="text-center" th:text="Links"></h2>
                     </div>
-                    <div class="ibox-content" sec:authorize="hasRole('USER')">
+                    <div class="ibox-content" sec:authorize="hasRole('ADMIN')">
                         <div class="table-responsive">
-                            <!-- table for admin -->
-                            <style>
-                                .custom{
-                                    font-size: 10px;
-                                },
-                                .bottomcustom, .topcustom {
-                                    font-size: 10px;
-                                }
-                            </style>
-                            <table id="linksDatatable" sec:authorize="hasRole('ADMIN')" class="table table-striped table-bordered table-hover custom">
+                            <table class="table table-striped table-bordered table-hover custom">
                                 <thead>
-
                                 <tr>
-                                    <th>Id</th>
                                     <th>Service</th>
                                     <th>Url</th>
                                     <th>Created at</th>
-                                    <th>Active</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr th:each="ln : ${links}">
-                                    <td th:text="${ln.id}"></td>
                                     <td th:text="${ln.service}"></td>
-                                    <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
+                                    <td><span th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></span></td>
                                     <td th:text="${ln.createdAt}"></td>
-                                    <th th:text="${ln.active} ? 'true' : 'false'" th:class="${ln.active} ? 'text-success' : 'text-danger'"></th>
                                     <td>
                                         <div class="text-center">
-                                            <a th:href="@{'/csp/' + ${csp.id} + '/link/change/' + ${ln.id}}" title="Change status" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
+                                            <!--<a th:href="@{'/csp/' + ${csp.id} + '/link/change/' + ${ln.id}}" title="Change status" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>-->
                                             <a th:href="@{'/csp/' + ${csp.id} + '/link/delete/' + ${ln.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
                                         </div>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
-                            <!-- table for user -->
-
-                            <table id="linksDatatable" sec:authorize="hasRole('USER')" class="table table-striped table-bordered table-hover custom">
-                                <style>
-                                    .custom{
-                                        font-size: 20px;
-                                    },
-                                    .bottomcustom, .topcustom {
-                                        font-size: 15px;
-                                    }
-                                </style>
-                                <thead>
-                                <tr>
-                                    <th>Service</th>
-                                    <th>Url</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="ln : ${links}">
-                                    <td th:text="${ln.service}"></td>
-                                    <td><a th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></a></td>
-                                </tr>
-                                </tbody>
-                            </table>
-
                         </div>
+                    </div>
+                    <div class="ibox-content">
+                        <table sec:authorize="hasRole('USER')" class="table table-striped table-bordered table-hover custom">
+                            <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Url</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ln : ${links}">
+                                <td th:text="${ln.service}"></td>
+                                <td><span th:href="@{${ln.url}}" th:text="${ln.url}" class="mylink"></span></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
+        </div>
 
         <!-- END BODY -->
         <div th:replace="~{fragments/footer :: js}"></div>
@@ -190,15 +172,11 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             $(document).ready(function(){
-                $('#linksDatatable').DataTable({
-                    pageLength: 50,
-                    responsive: true,
-                    "dom": '<"topcustom"lfr>t<"bottomcustom"ip>'
-                });
 
                 $(".mylink").click( function () {
 
                     var link = JSON.stringify($(this).html());
+                    var redirect = $(this).html();
 
                     if(link) {
                         $.ajax({
@@ -206,10 +184,16 @@
                             type: "POST",
                             url: "/click/save",
                             crossDomain: true,
-                            dataType: 'json',
+                            dataType: 'text',
                             contentType: "application/json; charset=utf-8",
-                            success: function () {console.log("click saved")},
-                            error: function () {console.log("error in click saving")}
+                            success: function () {
+                                console.log("click saved");
+                                window.location.replace(redirect);
+                            },
+                            error: function () {
+                                console.log("error in click saving");
+                                window.location.replace(redirect);
+                            }
                         });
                     }
                 });
@@ -235,7 +219,7 @@
                     } else {
                         inputValue--;
                         var serviceHtml = '<div  class="form-group"><input type="text" placeholder="service" class="service' + inputValue + ' my-service form-control"></div>';
-                        var linkHtml = '<div  class="form-group"><input type="text" placeholder="link" class="link' + inputValue + ' my-link form-control"></div>';
+                        var linkHtml = '<div  class="form-group"><input type="text" name="' + inputValue + '" placeholder="link" class="link' + inputValue + ' my-link form-control"></div>';
                         $("#services").append(serviceHtml);
                         $("#links").append(linkHtml);
                     }
@@ -259,13 +243,13 @@
                             data: toSend,
                             type: "POST",
                             url: "/link/add/" + [[${csp.id}]],
-                            dataType : "json",
+                            dataType : "text",
                             contentType: "application/json; charset=utf-8",
                             success: function () {
                                 location.reload();
                             },
-                            error: function (result) {
-                                location.reload();
+                            error: function () {
+                                alert("Something went wrong!!");
                             }
                         });
                     } else {
@@ -277,7 +261,7 @@
                 });
             /*]]>*/
         </script>
-        <script th:src="@{/assets/js/plugins/dataTables/datatables.min.js}"></script>
+
         <!-- FOOTER -->
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
