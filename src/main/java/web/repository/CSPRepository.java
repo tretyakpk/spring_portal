@@ -7,5 +7,4 @@ import web.model.User;
 import java.util.List;
 
 public interface CSPRepository extends JpaRepository<CSP, Integer> {
-    List<CSP> findAllBy(User user);
 }

@@ -10,5 +10,5 @@ import java.util.Set;
 
 public interface LinkRepository extends JpaRepository<Link, Integer> {
     Link getByUrl(String url);
-    HashSet<Link> findAllByCspOrderByIdDesc(CSP csp);
+    List<Link> findAllByCspOrderByServiceAsc(CSP csp);
 }
