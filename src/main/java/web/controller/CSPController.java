@@ -48,13 +48,7 @@ public class CSPController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("")
-    public String list(Model model, final HttpServletResponse response) {
-
-        Date today = new Date();
-        Date cacheDate = new Date(today.getTime() + (1000 * 60 * 60 * 24 * 3));
-        response.setHeader("Cache-Control", "max-age=7200, must-revalidate");
-        response.setHeader("Expires", cacheDate.toString());
-        response.setHeader("Pragma:", "cache");
+    public String list(Model model) {
 
         User user = getCurrentUser();
         List<CSP> csps = user.getCsps();
@@ -68,13 +62,7 @@ public class CSPController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @GetMapping("/csp/view/{id}")
-    public String view(@PathVariable("id") Integer id, Model model, final HttpServletResponse response){
-
-        Date today = new Date();
-        Date cacheDate = new Date(today.getTime() + (1000 * 60 * 60 * 24 * 3));
-        response.setHeader("Cache-Control", "max-age=7200, must-revalidate");
-        response.setHeader("Expires", cacheDate.toString());
-        response.setHeader("Pragma:", "cache");
+    public String view(@PathVariable("id") Integer id, Model model){
 
         User user = getCurrentUser();
 
@@ -84,7 +72,7 @@ public class CSPController {
 
         model.addAttribute("csps", user.getCsps());
         model.addAttribute("csp", csp);
-        model.addAttribute("links", linkRepository.findAllByCspOrderByIdDesc(csp));
+        model.addAttribute("links", linkRepository.findAllByCspOrderByServiceAsc(csp));
 
         return "csp/view";
     }
@@ -176,13 +164,7 @@ public class CSPController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(value = "/user/logs")
-    public String logs(Model model, final HttpServletResponse response) {
-
-        Date today = new Date();
-        Date cacheDate = new Date(today.getTime() + (1000 * 60 * 60 * 24 * 3));
-        response.setHeader("Cache-Control", "max-age=7200, must-revalidate");
-        response.setHeader("Expires", cacheDate.toString());
-        response.setHeader("Pragma:", "cache");
+    public String logs(Model model) {
 
         User user = getCurrentUser();
         List<Log> logs = logRepository.findTop50ByUserOrderByIdDesc(user);

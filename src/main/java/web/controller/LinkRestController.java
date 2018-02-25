@@ -24,12 +24,13 @@ public class LinkRestController {
     private CSPRepository CSPRepository;
 
     @RequestMapping(value = "/add/{csp_id}", method = RequestMethod.POST)
-    public ResponseEntity<HashSet<Link>> addLinks(@RequestBody HashSet<Link> links, @PathVariable("csp_id") Integer csp_id){
+    @ResponseBody
+    public String addLinks(@RequestBody HashSet<Link> links, @PathVariable("csp_id") Integer csp_id){
 
 
         CSP csp = CSPRepository.findOne(csp_id);
-        if(csp == null)
-            return new ResponseEntity<HashSet<Link>>(HttpStatus.BAD_REQUEST);
+//        if(csp == null)
+//            return new ResponseEntity<HashSet<Link>>(HttpStatus.BAD_REQUEST);
 
         for (Link link : links) {
             if(linkRepository.getByUrl(link.getUrl()) == null){
@@ -38,6 +39,7 @@ public class LinkRestController {
             }
         }
 
-        return new ResponseEntity<HashSet<Link>>(links, HttpStatus.OK);
+//        return new ResponseEntity<HashSet<Link>>(links, HttpStatus.OK);
+        return "OK";
     }
 }
