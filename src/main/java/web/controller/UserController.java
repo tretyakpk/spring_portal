@@ -51,7 +51,7 @@ public class UserController {
         if(bindingResult.hasErrors()) return "user/addform";
         else {
             user.setCreatedAt(new Date());
-            user.setRoles(roleRepository.findByRole("USER"));
+            user.setRoles(roleRepository.findByRole("CARRIER"));
             user.setActive(1);
             userRepository.save(user);
             redirectAttributes.addFlashAttribute("message", "User " + user.getName() + " added successfully!");

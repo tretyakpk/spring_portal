@@ -19,13 +19,6 @@ public class DefaultController {
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-
-        Date today = new Date();
-        Date cacheDate = new Date(today.getTime() + (1000 * 60 * 60 * 24 * 3));
-        response.setHeader("Cache-Control", "max-age=7200, must-revalidate");
-        response.setHeader("Expires", cacheDate.toString());
-        response.setHeader("Pragma:", "cache");
-
         return "/login";
     }
 }
