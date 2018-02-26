@@ -9,9 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 @Controller
 public class DefaultController {
+
+    @RequestMapping(value="/login")
+    public String loginPage (final Principal principal) {
+        if(principal == null)
+            return "login";
+        return "redirect:/";
+    }
+
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
