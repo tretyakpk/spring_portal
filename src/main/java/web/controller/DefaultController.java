@@ -1,8 +1,7 @@
 package web.controller;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -11,18 +10,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.security.Principal;
 
 @Controller
 public class DefaultController {
 
-//    @RequestMapping(value="/login")
-//    public String loginPage (final Principal principal) {
-//        if(principal == null)
-//            return "login";
-//        return "redirect:/";
-//    }
+    @RequestMapping(value="/login")
+    public String loginPage () {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken))
+            return "redirect:/";
+        return "login";
+    }
 
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
@@ -30,6 +30,6 @@ public class DefaultController {
         if (auth != null){
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "/login";
+        return "login";
     }
 }
