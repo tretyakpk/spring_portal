@@ -199,8 +199,9 @@ public class CSPController {
         return "OK";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_CARRIER') or hasRole('ROLE_ADMIN')")
     @GetMapping(value = "/enduser")
-    public String endUserWind(){
+    public String endUser(){
 
         User user = getCurrentUser();
 
