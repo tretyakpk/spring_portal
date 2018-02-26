@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,8 +22,8 @@ import web.repository.LogRepository;
 import web.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -46,18 +48,20 @@ public class CSPController {
     @Autowired
     private HttpServletRequest request;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_CARRIER')")
     @GetMapping("")
     public String list(Model model) {
-
-        User user = getCurrentUser();
-        List<CSP> csps = user.getCsps();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println( authentication.getDetails());
-
-        model.addAttribute("csps", csps);
-        return "csp/list";
+        System.out.println(request.isUserInRole("ROLE_CARRIER"));
+        if (request.isUserInRole("ROLE_CARRIER")) {
+            List<CSP> csps = CSPRepository.findAll();
+            model.addAttribute("csps", csps);
+            return "csp/carrierlist";
+        } else {
+            User user = getCurrentUser();
+            List<CSP> csps = user.getCsps();
+            model.addAttribute("csps", csps);
+            return "csp/list";
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
