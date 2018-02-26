@@ -17,7 +17,7 @@ import javax.validation.Valid;
 import java.util.*;
 
 @Controller
-@PreAuthorize("hasRole('ROLE_ADMIN')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
 @RequestMapping(value = "/user")
 public class UserController {
 

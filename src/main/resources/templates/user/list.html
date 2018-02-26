@@ -9,7 +9,7 @@
         <div th:replace="~{fragments/header :: navbar}"></div>
         <!-- BODY: -->
         <div class="wrapper wrapper-content">
-            <div class="row">
+            <div class="row" sec:authorize="hasRole('ADMIN')">
                 <div class="col-md-4 portal-button">
                     <a th:href="@{/user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
                 </div>
@@ -44,8 +44,8 @@
                                 <td>
                                     <div class="text-center">
                                     <a th:href="@{'/user/view/' + ${us.id}}" title="View" class="btn btn-sm btn-default btn-icon fa fa-eye"></a>
-                                    <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o"></a>
-                                    <a th:href="@{'/user/delete/' + ${us.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                                    <a th:href="@{'/user/edit/' + ${us.id}}" title="Edit" class="btn btn-sm btn-primary btn-icon fa fa-pencil-square-o" sec:authorize="hasRole('ADMIN')"></a>
+                                    <a th:href="@{'/user/delete/' + ${us.id}}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o" sec:authorize="hasRole('ADMIN')"></a>
                                     </div>
                                 </td>
                             </tr>

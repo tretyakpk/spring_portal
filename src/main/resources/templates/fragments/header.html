@@ -23,7 +23,7 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar">
             <ul class="nav navbar-nav">
-                <li sec:authorize="hasRole('ADMIN')">
+                <li sec:authorize="hasRole('ADMIN') or hasRole('USER')">
                     <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
                 </li>
             </ul>

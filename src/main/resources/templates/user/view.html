@@ -9,7 +9,7 @@
         <div th:replace="~{fragments/header :: navbar}"></div>
         <!-- BODY: -->
         <div class="wrapper wrapper-content">
-            <div class="row">
+            <div class="row" sec:authorize="hasRole('ADMIN')">
                 <div class="col-md-4 portal-button">
                     <a th:href="@{/user/add}" class="btn btn-block btn-lg btn-success">NEW USER</a>
                 </div>
@@ -51,7 +51,7 @@
                     </table>
                 </div>
             </div>
-            <div class="ibox-content">
+            <div class="ibox-content" sec:authorize="hasRole('ADMIN')">
                 
                 <div class="row">
                     <!-- form with all csps -->

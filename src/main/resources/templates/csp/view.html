@@ -25,14 +25,8 @@
                 </div>
                 <div class="navbar-collapse collapse" id="navbar">
                     <ul class="nav navbar-nav">
-                        <li sec:authorize="hasRole('ADMIN')">
+                        <li sec:authorize="hasRole('ADMIN') or hasRole('USER')">
                             <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
-                        </li>
-                        <li sec:authorize="hasRole('USER')">
-                            <a aria-expanded="false" role="button" th:href="@{/user/logs}">LOGS</a>
-                        </li>
-                        <li th:each="csp : ${csps}" sec:authorize="hasRole('USER')">
-                            <a th:href="@{'/csp/view/' + ${csp.id}}" th:text="@{${#strings.toUpperCase(csp.name)}}" aria-expanded="false" role="button"></a>
                         </li>
                     </ul>
                     <ul class="nav navbar-top-links navbar-right">
