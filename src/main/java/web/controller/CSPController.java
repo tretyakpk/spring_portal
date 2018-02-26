@@ -51,7 +51,6 @@ public class CSPController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_CARRIER')")
     @GetMapping("")
     public String list(Model model) {
-        System.out.println(request.isUserInRole("ROLE_CARRIER"));
         if (request.isUserInRole("ROLE_CARRIER")) {
             List<CSP> csps = CSPRepository.findAll();
             model.addAttribute("csps", csps);
