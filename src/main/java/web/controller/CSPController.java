@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.enrichment.CryptoData;
 import web.model.*;
-import web.repository.CSPRepository;
-import web.repository.LinkRepository;
-import web.repository.LogRepository;
-import web.repository.UserRepository;
+import web.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -40,6 +37,9 @@ public class CSPController {
     private LogRepository logRepository;
 
     @Autowired
+    private LinkShowRepository linkShowRepository;
+
+    @Autowired
     private Environment env;
 
     @Autowired
@@ -58,6 +58,14 @@ public class CSPController {
             model.addAttribute("csps", csps);
             return "csp/list";
         }
+    }
+
+    @GetMapping("/links")
+    public String linksList(Model model) {
+        List<LinkShow> list = linkShowRepository.findAll();
+        model.addAttribute("links", list);
+
+        return "csp/linklist";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
