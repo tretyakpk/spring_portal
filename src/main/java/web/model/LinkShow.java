@@ -20,14 +20,18 @@ public class LinkShow {
     @Column(name = "link", length = 511)
     private String link;
 
+    @Column(name = "carrier")
+    private String carrier;
+
     public LinkShow() {
     }
 
-    public LinkShow(String merchant, String service, String link) {
+    public LinkShow(String merchant, String service, String link, String carrier) {
 
         this.merchant = merchant;
         this.service = service;
         this.link = link;
+        this.carrier = carrier;
     }
 
     public int getId() {
@@ -60,5 +64,13 @@ public class LinkShow {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public void setCarrier(String carrier) {
+        this.carrier = carrier;
     }
 }

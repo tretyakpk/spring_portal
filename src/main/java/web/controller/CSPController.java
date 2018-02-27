@@ -17,7 +17,6 @@ import web.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -60,12 +59,20 @@ public class CSPController {
         }
     }
 
-    @GetMapping("/links")
-    public String linksList(Model model) {
-        List<LinkShow> list = linkShowRepository.findAll();
-        model.addAttribute("links", list);
+    @GetMapping("/links/{carrier}")
+    public String linksList(Model model, @PathVariable("carrier") String carrier) {
 
-        return "csp/linklist";
+        if(carrier.equals("wind")) {
+            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
+            model.addAttribute("links", list);
+            return "csp/windlinks";
+        } else if (carrier.equals("vodafone")){
+            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
+            model.addAttribute("links", list);
+            return "csp/vodalinks";
+        } else {
+            return "redirect:/";
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
