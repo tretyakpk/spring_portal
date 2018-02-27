@@ -13,9 +13,9 @@
     }
 </style>
 
-<div class="middle-box text-center loginscreen animated fadeInDown" style="padding-top: 0;">
+<div class="middle-box text-center loginscreen animated fadeInDown" style="padding-top: 25px; padding-bottom: 25px;">
     <div>
-        <img th:src="@{/assets/img/wind.png}" alt="wind-logo" class="img-responsive center-block">
+        <img th:src="@{/assets/img/vodafone_logo.png}" alt="vodafone-logo" class="img-responsive center-block">
     </div>
 </div>
 <div id="wrapper">
@@ -24,7 +24,7 @@
             <div class="row" >
                 <div class="col-lg-12">
                     <div class="ibox-title">
-                        <h2 class="text-center" th:text="'Lista Servizi WIND'"></h2>
+                        <h2 class="text-center" th:text="'Lista Servizi Vodafone'"></h2>
                     </div>
                     <div class="ibox-content" sec:authorize="hasRole('CARRIER')">
                         <div class="table-responsive">
