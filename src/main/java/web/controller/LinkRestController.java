@@ -27,8 +27,6 @@ public class LinkRestController {
 
 
         CSP csp = CSPRepository.findOne(csp_id);
-//        if(csp == null)
-//            return new ResponseEntity<HashSet<Link>>(HttpStatus.BAD_REQUEST);
 
         for (Link link : links) {
             if(linkRepository.getByUrl(link.getUrl()) == null){
@@ -37,7 +35,6 @@ public class LinkRestController {
             }
         }
 
-//        return new ResponseEntity<HashSet<Link>>(links, HttpStatus.OK);
         return "OK";
     }
 }

@@ -26,6 +26,9 @@
                 <li sec:authorize="hasRole('ADMIN') or hasRole('USER')">
                     <a aria-expanded="false" role="button" th:href="@{/user}">USERS</a>
                 </li>
+                <li sec:authorize="hasRole('ADMIN') or hasRole('USER')">
+                    <a aria-expanded="false" role="button" th:href="@{/page/view}">PAGE</a>
+                </li>
             </ul>
             <ul class="nav navbar-top-links navbar-right">
                 <li>
