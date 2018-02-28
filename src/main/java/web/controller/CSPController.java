@@ -59,20 +59,11 @@ public class CSPController {
         }
     }
 
-    @GetMapping("/links/{carrier}")
-    public String linksList(Model model, @PathVariable("carrier") String carrier) {
-
-        if(carrier.equals("wind")) {
-            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
-            model.addAttribute("links", list);
-            return "csp/windlinks";
-        } else if (carrier.equals("vodafone")){
-            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
-            model.addAttribute("links", list);
-            return "csp/vodalinks";
-        } else {
-            return "redirect:/";
-        }
+    @GetMapping("/links/vodafone")
+    public String linksList(Model model) {
+        List<LinkShow> list = linkShowRepository.findAll();
+        model.addAttribute("links", list);
+        return "csp/vodalinks";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")

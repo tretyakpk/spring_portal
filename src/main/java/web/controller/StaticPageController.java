@@ -11,7 +11,6 @@ import web.model.*;
 import web.repository.*;
 import javax.validation.Valid;
 
-
 @Controller
 @RequestMapping(value = "/page")
 public class StaticPageController {
