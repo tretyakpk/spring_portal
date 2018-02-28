@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="top-navigation">
+<style>
+    .mylink{
+        color: #337ab7;
+        text-decoration: none;
+    }
+    .mylink:hover{
+        cursor: pointer;
+    }
+</style>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <!-- HEADER -->
+        <div class="row border-bottom white-bg" th:replace="~{csp/view :: navbar}"></div>
+        <!-- BODY: -->
+        <div class="wrapper wrapper-content">
+            <div class="row" >
+                <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h1 class="text-center" >All links for the static page</h1>
+                        <div th:if="${message}">
+                            <div th:text="${message}" class="alert alert-success">Success message</div>
+                        </div>
+                        <div th:if="${error}">
+                            <div th:text="${error}" class="alert alert-danger">Error message</div>
+                        </div>
+                    </div>
+                    <div class="ibox-content" sec:authorize="hasRole('ADMIN')">
+                        <form th:action="@{/page/add}" th:object="${link}" method="post" action="#">
+                            <div class="form-group row" th:classappend="${#fields.hasErrors('merchant')} ? 'has-error'">
+                                <label class="col-sm-2 control-label">Merchant</label>
+                                <div class="col-sm-10">
+                                    <input type="text" placeholder="merchant" th:field="*{merchant}" class="form-control">
+                                    <span th:if="${#fields.hasErrors('merchant')}" th:errors="*{merchant}" th:class="help-block"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row" th:classappend="${#fields.hasErrors('service')} ? 'has-error'">
+                                <label class="col-sm-2 control-label">Service</label>
+                                <div class="col-sm-10">
+                                    <input type="text" placeholder="service" th:field="*{service}" class="form-control">
+                                    <div th:if="${#fields.hasErrors('service')}" th:errors="*{service}" th:class="help-block"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row" th:classappend="${#fields.hasErrors('link')} ? 'has-error'">
+                                <label class="col-sm-2 control-label">Link</label>
+                                <div class="col-sm-10">
+                                    <input type="text" placeholder="link" th:field="*{link}" class="form-control">
+                                    <div th:if="${#fields.hasErrors('link')}" th:errors="*{link}" th:class="help-block"></div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button class="btn btn-sm btn-primary m-t-n-xs" type="submit">Add</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                            <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Search in table">
+                            <table class="tablentable-bordered table-hover footable table-bordered table table-stripped" data-page-size="10" data-filter=#filter>
+                                <thead>
+                                <tr>
+                                    <th>Merchant</th>
+                                    <th>Service</th>
+                                    <th>Url</th>
+                                    <th sec:authorize="hasRole('ADMIN')">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr  th:each="ln : ${links}">
+                                    <td th:text="${ln.merchant}"></td>
+                                    <td th:text="${ln.service}"></td>
+                                    <td><a th:href="${ln.link}" th:text="${ln.link}"></a></td>
+                                    <td>
+                                        <div class="text-center" sec:authorize="hasRole('ADMIN')">
+                                            <a th:href="${'/page/static/delete/' + ln.id}" title="Delete" class="btn btn-sm btn-danger btn-icon fa fa-trash-o"></a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="5">
+                                        <ul class="pagination pull-right"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- END BODY -->
+        <div th:replace="~{fragments/footer :: js}"></div>
+        <script th:src="@{/assets/js/plugins/footable/footable.all.min.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            $(document).ready(function(){
+
+                $(".mylink").click( function () {
+
+                    var link = JSON.stringify($(this).html());
+                    var redirect = $(this).html();
+
+                    if(link) {
+                        $.ajax({
+                            data: link,
+                            type: "POST",
+                            url: "/click/save",
+                            crossDomain: true,
+                            dataType: 'text',
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                console.log("click saved");
+                                window.location.replace(redirect);
+                            },
+                            error: function () {
+                                console.log("error in click saving");
+                                window.location.replace(redirect);
+                            }
+                        });
+                    }
+                });
+
+                $(".touchspin3").TouchSpin({
+                    min: 1,
+                    max: 20,
+                    verticalbuttons: true,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+
+                $("input#addlinkfield").change(function () {
+                    var inputValue = $("input#addlinkfield").val();
+                    inputValue++;
+
+                    var ln = $("input.my-service.service" + inputValue);
+                    var sr = $("input.my-link.link" + inputValue );
+                    if(ln.length){
+                        ln.parent('div').remove();
+                        sr.parent('div').remove();
+                    } else {
+                        inputValue--;
+                        var serviceHtml = '<div  class="form-group"><input type="text" placeholder="service" class="service' + inputValue + ' my-service form-control"></div>';
+                        var linkHtml = '<div  class="form-group"><input type="text" name="' + inputValue + '" placeholder="link" class="link' + inputValue + ' my-link form-control"></div>';
+                        $("#services").append(serviceHtml);
+                        $("#links").append(linkHtml);
+                    }
+
+                });
+
+                $("#addlinks").click(function (e) {
+                    var lls = [];
+                    $("input.my-link").each(function () {
+                        var serviceVal = $("input.service" + $(this).attr('name')).val();
+                        if ($(this).val()) {
+                            lls.push({"url":$(this).val(), "service":serviceVal});
+                        }
+                    });
+
+                    var toSend = JSON.stringify(lls);
+
+                    if (toSend) {
+                        console.log(toSend);
+                        $.ajax({
+                            data: toSend,
+                            type: "POST",
+                            url: "/link/add/",
+                            dataType : "text",
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                location.reload();
+                            },
+                            error: function () {
+                                alert("Something went wrong!!");
+                            }
+                        });
+                    } else {
+                        alert("Data is empty!");
+                    }
+
+                });
+
+                });
+            /*]]>*/
+        </script>
+
+        <!-- FOOTER -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+</body>
+</html>

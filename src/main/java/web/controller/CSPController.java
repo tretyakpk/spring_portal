@@ -13,14 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web.enrichment.CryptoData;
 import web.model.*;
-import web.repository.CSPRepository;
-import web.repository.LinkRepository;
-import web.repository.LogRepository;
-import web.repository.UserRepository;
+import web.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.*;
 
 @Controller
@@ -40,6 +36,9 @@ public class CSPController {
     private LogRepository logRepository;
 
     @Autowired
+    private LinkShowRepository linkShowRepository;
+
+    @Autowired
     private Environment env;
 
     @Autowired
@@ -57,6 +56,22 @@ public class CSPController {
             List<CSP> csps = user.getCsps();
             model.addAttribute("csps", csps);
             return "csp/list";
+        }
+    }
+
+    @GetMapping("/links/{carrier}")
+    public String linksList(Model model, @PathVariable("carrier") String carrier) {
+
+        if(carrier.equals("wind")) {
+            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
+            model.addAttribute("links", list);
+            return "csp/windlinks";
+        } else if (carrier.equals("vodafone")){
+            List<LinkShow> list = linkShowRepository.findAllByCarrier(carrier);
+            model.addAttribute("links", list);
+            return "csp/vodalinks";
+        } else {
+            return "redirect:/";
         }
     }
 

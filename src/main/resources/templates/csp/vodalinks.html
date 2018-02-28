@@ -1,0 +1,143 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:fragment="head">
+    <title th:text="'Lista Servizi Vodafone'"></title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link th:href="@{/assets/css/bootstrap.min.css}"             rel="stylesheet" media="screen" >
+    <link th:href="@{/assets/font-awesome/css/font-awesome.css}" rel="stylesheet" media="screen" >
+    <link th:href="@{/assets/css/animate.css}"                   rel="stylesheet" media="screen">
+    <link th:href="@{/assets/css/style.css}"                     rel="stylesheet" media="screen">
+    <link th:href="@{/assets/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css}" rel="stylesheet">
+    <link th:href="@{/assets/css/plugins/footable/footable.core.css}" rel="stylesheet" media="screen">
+</head>
+<body>
+<body class="gray-bg top-navigation">
+<style>
+    .mylink{
+        color: #337ab7;
+        text-decoration: none;
+    }
+    .mylink:hover{
+        cursor: pointer;
+    }
+</style>
+
+<div class="middle-box text-center loginscreen animated fadeInDown" style="padding-top: 25px; padding-bottom: 25px;">
+    <div>
+        <img th:src="@{/assets/img/vodafone-logo.png}" alt="vodafone-logo" class="img-responsive center-block">
+    </div>
+</div>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg">
+        <div class="">
+            <div class="row" >
+                <div class="col-lg-12">
+                    <div class="ibox-title">
+                        <h2 class="text-center" th:text="'Lista Servizi Vodafone'"></h2>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="table-responsive">
+                        <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Search in table">
+                        <table class="tablentable-bordered table-hover footable table table-stripped" data-page-size="50" data-filter=#filter>
+                            <thead>
+                            <tr>
+                                <th>Merchant</th>
+                                <th>Service</th>
+                                <th>Url</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr  th:each="ln : ${links}">
+                                    <td th:text="${ln.merchant}"></td>
+                                    <td th:text="${ln.service}"></td>
+                                    <td><a th:href="${ln.link}" th:text="${ln.link}"></a></td>
+                                </tr>
+                            <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                    <ul class="pagination pull-right"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- END BODY -->
+        <div th:replace="~{fragments/footer :: js}"></div>
+
+        <script th:src="@{/assets/js/plugins/footable/footable.all.min.js}"></script>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            $(document).ready(function(){
+
+                $('.footable').footable();
+
+                $(".mylink").click( function () {
+
+                    var link = JSON.stringify($(this).html());
+                    var redirect = $(this).html();
+
+                    if(link) {
+                        $.ajax({
+                            data: link,
+                            type: "POST",
+                            url: "/click/save",
+                            crossDomain: true,
+                            dataType: 'text',
+                            contentType: "application/json; charset=utf-8",
+                            success: function () {
+                                console.log("click saved");
+                                window.location.replace(redirect);
+                            },
+                            error: function () {
+                                console.log("error in click saving");
+                                window.location.replace(redirect);
+                            }
+                        });
+                    }
+                });
+
+                $(".touchspin3").TouchSpin({
+                    min: 1,
+                    max: 20,
+                    verticalbuttons: true,
+                    buttondown_class: 'btn btn-white',
+                    buttonup_class: 'btn btn-white'
+                });
+
+
+                $("input#addlinkfield").change(function () {
+                    var inputValue = $("input#addlinkfield").val();
+                    inputValue++;
+
+                    var ln = $("input.my-service.service" + inputValue);
+                    var sr = $("input.my-link.link" + inputValue );
+                    if(ln.length){
+                        ln.parent('div').remove();
+                        sr.parent('div').remove();
+                    } else {
+                        inputValue--;
+                        var serviceHtml = '<div  class="form-group"><input type="text" placeholder="service" class="service' + inputValue + ' my-service form-control"></div>';
+                        var linkHtml = '<div  class="form-group"><input type="text" name="' + inputValue + '" placeholder="link" class="link' + inputValue + ' my-link form-control"></div>';
+                        $("#services").append(serviceHtml);
+                        $("#links").append(linkHtml);
+                    }
+
+                });
+
+                });
+            /*]]>*/
+        </script>
+
+        <!-- FOOTER -->
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+</body>
+</html>
