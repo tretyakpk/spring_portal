@@ -33,6 +33,7 @@ public class StaticPageController {
     public String add(@Valid LinkShow linkShow, BindingResult bindingResult, RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()) return "redirect:/links/view";
         else {
+            linkShow.setCarrier("wind");
             linkShowRepository.save(linkShow);
             redirectAttributes.addFlashAttribute("message", "Link added successfully!");
             return "redirect:/page/view";
