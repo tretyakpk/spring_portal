@@ -23,18 +23,42 @@
         <h3>Welcome</h3>
         <p>Login in. To see it in action.</p>
         <form th:action="@{/login}" method="post">
-            <!--<div class="form-group">-->
-                <input type="text" name="username" class="form-control" placeholder="Username" th:value="Vodafone" th:type="hidden">
-            <!--</div>-->
-            <!--<div class="form-group">-->
-                <input type="password" name="password" class="form-control" placeholder="Password" th:value="1" th:type="hidden">
-            <!--</div>-->
+            <div class="form-group">
+                <input name="username" class="form-control" placeholder="Username" th:value="Vodafone" th:type="hidden">
+            </div>
+            <div class="form-group">
+                <input name="password" class="form-control" placeholder="Password" th:value="1" th:type="hidden">
+            </div>
             <button type="submit" class="btn btn-primary block full-width m-b">ACCEDI</button>
         </form>
+        <button id="form" class="btn btn-success block full-width m-b">SHOW LOGIN FORM</button>
     </div>
 </div>
 
 <script th:src="@{/assets/js/jquery-3.1.1.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+
+<script>
+    $(document).ready(function() {
+
+        var usernameValue = $("input[name=username]").attr("value");
+        var passwordValue = $("input[name=password]").attr("value");
+
+        $("#form").click(function () {
+            var usernameInput = $("input[name=username]");
+            var passwordInput = $("input[name=password]");
+            if (usernameInput.attr("type") == "hidden" && passwordInput.attr("type") == "hidden") {
+                usernameInput.attr("type", "text").attr("value", "");
+                passwordInput.attr("type", "password").attr("value", "");
+                $(this).text("HIDE LOGIN FORM");
+            } else {
+                usernameInput.attr("type", "hidden").attr("value", usernameValue);
+                passwordInput.attr("type", "hidden").attr("value", passwordValue);
+                $(this).text("SHOW LOGIN FORM");
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
