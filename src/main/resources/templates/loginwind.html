@@ -24,17 +24,19 @@
         <p>Login in. To see it in action.</p>
         <form th:action="@{/login}" method="post">
             <div class="form-group">
-                <input name="username" class="form-control" placeholder="Username" th:type="text">
+                <input name="username" class="form-control" placeholder="Username" th:value="Wind" th:type="hidden">
             </div>
             <div class="form-group">
-                <input name="password" class="form-control" placeholder="Password" th:type="password">
+                <input name="password" class="form-control" placeholder="Password" th:value="1" th:type="hidden">
             </div>
-            <button type="submit" class="btn btn-primary block full-width m-b">LOGIN</button>
+            <button type="submit" class="btn btn-primary block full-width m-b">ACCEDI</button>
         </form>
     </div>
 </div>
 
 <script th:src="@{/assets/js/jquery-3.1.1.min.js}"></script>
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+</script>
 </body>
 </html>
