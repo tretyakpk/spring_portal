@@ -241,6 +241,7 @@ public class CSPController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             forLog.put("get", mapGet);
+            forLog.put("headers", mapHeaders);
 
             String json = objectMapper.writeValueAsString(forLog);
 
