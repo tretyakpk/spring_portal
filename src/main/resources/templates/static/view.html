@@ -62,7 +62,7 @@
                     <div class="ibox-content">
                         <div class="table-responsive">
                             <input type="text" class="form-control input-sm m-b-xs" id="filter" placeholder="Search in table">
-                            <table class="tablentable-bordered table-hover footable table-bordered table table-stripped" data-page-size="10" data-filter=#filter>
+                            <table class="tablentable-bordered table-hover footable table-bordered table table-stripped" data-page-size="50" data-filter=#filter>
                                 <thead>
                                 <tr>
                                     <th>Merchant</th>
@@ -102,6 +102,8 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             $(document).ready(function(){
+
+                $('.footable').footable();
 
                 $(".mylink").click( function () {
 
