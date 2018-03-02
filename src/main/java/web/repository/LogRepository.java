@@ -10,5 +10,5 @@ import java.util.List;
 public interface LogRepository extends JpaRepository<Log, Integer> {
     List<Log> findTop50ByUserOrderByIdDesc(User user);
 
-    List<Log> findAllByUserOrderByIdDesc(User user, Pageable pageable);
+    List<Log> findAllByUserOrderByIdAsc(User user, Pageable pageable);
 }
