@@ -1,6 +1,7 @@
 package web.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class Log {
     @Column(name = "type")
     private String type;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm:ss dd-MM-yyyy")
     @Column(name = "created_at")
     private Date created_at;
 
