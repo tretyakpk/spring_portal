@@ -24,6 +24,24 @@ public class DefaultController {
         return "login";
     }
 
+    @RequestMapping(value="/login/vodafone")
+    public String loginVodafone () {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken))
+            return "redirect:/";
+        return "loginvodafone";
+    }
+
+    @RequestMapping(value="/login/agcom")
+    public String loginAgcom () {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken))
+            return "redirect:/";
+        return "loginagcom";
+    }
+
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
