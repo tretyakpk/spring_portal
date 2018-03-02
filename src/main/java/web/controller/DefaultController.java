@@ -24,6 +24,24 @@ public class DefaultController {
         return "login";
     }
 
+    @RequestMapping(value="/login/wind")
+    public String loginWind () {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken))
+            return "redirect:/";
+        return "loginwind";
+    }
+
+    @RequestMapping(value="/login/agcom")
+    public String loginAgcom () {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken))
+            return "redirect:/";
+        return "loginagcom";
+    }
+
     @RequestMapping(value="/logout", method = RequestMethod.GET)
     public String logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -84,16 +84,10 @@ public class UserController {
     public String view(@PathVariable("id") Integer id, Model model){
 
         User user                 = userRepository.findOne(id);
-        List<CSP> notUserCsps     = CSPRepository.findAll();
+        Integer logsCount = user.getLogs().size();
 
-        List<CSP> userCsps = user.getCsps();
-        notUserCsps.removeAll(userCsps);
-
-        model.addAttribute("userCsps", userCsps);
-        model.addAttribute("notUserCsps", notUserCsps);
         model.addAttribute("user", user);
-
-        model.addAttribute("logs", logRepository.findTop50ByUserOrderByIdDesc(user));
+        model.addAttribute("logsCount", logsCount/50 + 1);
         return "user/view";
     }
 

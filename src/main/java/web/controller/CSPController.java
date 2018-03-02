@@ -189,6 +189,9 @@ public class CSPController {
 
         HashMap<String, Object> forLog     = new HashMap<>();
         ObjectMapper objectMapper = new ObjectMapper();
+
+        Link link = linkRepository.getByUrl(body);
+
         try {
             forLog.put("click", body);
             String json = objectMapper.writeValueAsString(forLog);
@@ -197,6 +200,7 @@ public class CSPController {
             log.setCreated_at(new Date());
             log.setParameters(json);
             log.setType("click");
+            log.setService(link.getService());
             log.setUser(getCurrentUser());
             logRepository.save(log);
         }

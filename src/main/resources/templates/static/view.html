@@ -107,8 +107,7 @@
 
                 $(".mylink").click( function () {
 
-                    var link = JSON.stringify($(this).html());
-                    var redirect = $(this).html();
+                    var link = $(this).html();
 
                     if(link) {
                         $.ajax({
@@ -117,14 +116,14 @@
                             url: "/click/save",
                             crossDomain: true,
                             dataType: 'text',
-                            contentType: "application/json; charset=utf-8",
+                            contentType: "application/text; charset=utf-8",
                             success: function () {
                                 console.log("click saved");
-                                window.location.replace(redirect);
+                                window.location.replace(link);
                             },
                             error: function () {
                                 console.log("error in click saving");
-                                window.location.replace(redirect);
+                                window.location.replace(link);
                             }
                         });
                     }
